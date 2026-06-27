@@ -26,6 +26,15 @@ app.use(detectInjection);
 // Apply scraping detection to ambulance search only
 app.use('/api/ambulances/search', detectScraping);
 
+// Health Check Route
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'MedMove API is running',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const providerRoutes = require('./routes/providerRoutes');
