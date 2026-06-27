@@ -1,0 +1,389 @@
+/* ============================================
+   UserRegister.css — Matching Provider Register Aesthetic
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── Page Shell ─────────────────────────────── */
+.user-register-page {
+  min-height: 100vh;
+  background-color: #e8f4fb;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Crect width='56' height='100' fill='%23ddeef8'/%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0-2l26-15V18L28 2 2 18v31L28 64z' fill='%23c8e0f0' fill-opacity='0.4'/%3E%3C/svg%3E");
+  background-size: 56px 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Top Logo ───────────────────────────────── */
+.ur-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.ur-logo-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #C8102E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.ur-logo-text {
+  font-size: 22px;
+  font-weight: 800;
+  color: #C8102E;
+  letter-spacing: -0.01em;
+}
+
+.ur-tagline {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7a9ab0;
+  text-align: center;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+/* ── Card ───────────────────────────────────── */
+.user-register-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 80, 140, 0.10);
+  padding: 36px 40px;
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid rgba(200, 220, 240, 0.6);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Card Header Badge ──────────────────────── */
+.ur-badge {
+  display: inline-block;
+  background: #fff0f2;
+  border: 1px solid #fcd0d5;
+  border-radius: 50px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9B0B22;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.ur-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0A0F1E;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.ur-subtitle {
+  font-size: 13px;
+  color: #7a9ab0;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+}
+
+/* ── Alert Messages ─────────────────────────── */
+.ur-error {
+  color: #9B0B22;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: #fff0f2;
+  border: 1px solid #fcd0d5;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ur-dev-otp {
+  color: #856404;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: #FFF3CD;
+  border: 1px solid #FFEEBA;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ── Field Labels ───────────────────────────── */
+.ur-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4a6a7a;
+  margin-bottom: 6px;
+}
+
+.ur-label .required {
+  color: #C8102E;
+  margin-left: 2px;
+}
+
+/* ── Field Groups ───────────────────────────── */
+.ur-field {
+  margin-bottom: 16px;
+}
+
+/* ── Inputs ─────────────────────────────────── */
+.ur-input {
+  width: 100%;
+  height: 50px;
+  border: 1.5px solid #dde8f0;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #111;
+  background: #f8fbfd;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+.ur-input:focus {
+  border-color: #C8102E;
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.08);
+  background: #ffffff;
+}
+
+.ur-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Password Wrapper ───────────────────────── */
+.ur-password-wrapper {
+  position: relative;
+}
+
+.ur-password-wrapper .ur-input {
+  padding-right: 44px;
+}
+
+.ur-eye {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aab8c2;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  user-select: none;
+}
+
+/* ── Phone + OTP Row ────────────────────────── */
+.ur-phone-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.ur-phone-row .ur-input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.ur-send-otp-btn {
+  height: 50px;
+  padding: 0 20px;
+  background: #0A0F1E;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+  font-family: 'Inter', sans-serif;
+  flex-shrink: 0;
+}
+
+.ur-send-otp-btn:hover {
+  background: #1a2f4a;
+}
+
+.ur-send-otp-btn.sent {
+  background: #e8f8ee;
+  color: #1a7a3a;
+  border: 1.5px solid #b2dfc0;
+  cursor: default;
+  font-weight: 600;
+}
+
+.ur-send-otp-btn.sent:hover {
+  background: #e8f8ee;
+}
+
+/* ── OTP Verify Row ─────────────────────────── */
+.ur-otp-verify-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.ur-otp-verify-row .ur-input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.ur-verify-otp-btn {
+  height: 50px;
+  padding: 0 20px;
+  background: #1a7a3a;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.ur-verify-otp-btn:hover {
+  background: #145e2c;
+}
+
+/* ── Phone verified badge ───────────────────── */
+.ur-phone-verified {
+  font-size: 13px;
+  color: #1a7a3a;
+  font-weight: 500;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Submit Button ───────────────────────────── */
+.ur-submit-btn {
+  width: 100%;
+  height: 52px;
+  background: #C8102E;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.ur-submit-btn:hover:not(:disabled) {
+  background: #a50d25;
+  box-shadow: 0 6px 20px rgba(200, 16, 46, 0.28);
+  transform: translateY(-1px);
+}
+
+.ur-submit-btn:disabled {
+  background: #d0a0a8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Divider ────────────────────────────────── */
+.ur-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.ur-divider-line {
+  flex: 1;
+  height: 1px;
+  background: #e8eef2;
+}
+
+.ur-divider-text {
+  font-size: 11px;
+  color: #aab8c2;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+/* ── Footer Link ────────────────────────────── */
+.ur-footer {
+  text-align: center;
+  font-size: 13px;
+  color: #7a9ab0;
+  margin-top: 6px;
+}
+
+.ur-footer a {
+  color: #C8102E;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ── Trust Badges ───────────────────────────── */
+.ur-trust-badges {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.ur-trust-badge {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(200, 220, 240, 0.8);
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 11px;
+  color: #4a6a7a;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+/* ── Mobile ─────────────────────────────────── */
+@media (max-width: 480px) {
+  .user-register-page {
+    padding: 24px 16px;
+  }
+
+  .user-register-card {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .ur-trust-badges {
+    justify-content: center;
+  }
+}

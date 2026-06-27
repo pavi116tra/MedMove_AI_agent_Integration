@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Blue circle background -->
+  <circle cx="32" cy="32" r="32" fill="#1a6fc4"/>
+
+  <!-- White bold "M" letter -->
+  <text
+    x="32"
+    y="44"
+    font-family="Arial, Helvetica, sans-serif"
+    font-weight="900"
+    font-size="36"
+    fill="#ffffff"
+    text-anchor="middle"
+    letter-spacing="-2"
+  >M</text>
+
+  <!-- Red cross badge (top-right) -->
+  <circle cx="50" cy="14" r="10" fill="#E64E59"/>
+  <rect x="48.5" y="9" width="3" height="10" fill="white" rx="1"/>
+  <rect x="45" y="12.5" width="10" height="3" fill="white" rx="1"/>
+</svg>

@@ -1,0 +1,319 @@
+/* ============================================
+   UserLogin.css — Full Redesign
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── Page Shell ─────────────────────────────── */
+.user-login-page {
+  min-height: 100vh;
+  background-color: #e8f4fb;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Crect width='56' height='100' fill='%23ddeef8'/%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0-2l26-15V18L28 2 2 18v31L28 64z' fill='%23c8e0f0' fill-opacity='0.4'/%3E%3C/svg%3E");
+  background-size: 56px 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+}
+
+/* ── Top Logo ───────────────────────────────── */
+.ul-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 8px;
+}
+
+.ul-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ul-logo-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #C8102E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.ul-logo-text {
+  font-size: 22px;
+  font-weight: 800;
+  color: #C8102E;
+  letter-spacing: 0.04em;
+}
+
+.ul-tagline {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7a9ab0;
+  font-weight: 500;
+}
+
+/* ── Card ───────────────────────────────────── */
+.user-login-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 80, 140, 0.10);
+  padding: 36px 40px;
+  width: 100%;
+  max-width: 440px;
+  border: 1px solid rgba(200, 220, 240, 0.6);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Card Header Badge ──────────────────────── */
+.ul-badge {
+  display: inline-block;
+  background: #fff0f2;
+  border: 1px solid #fcd0d5;
+  border-radius: 50px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9B0B22;
+  letter-spacing: 0.1em;
+  margin-bottom: 14px;
+}
+
+.ul-card-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0A0F1E;
+  margin: 0 0 5px 0;
+  line-height: 1.2;
+}
+
+.ul-card-subtitle {
+  font-size: 13px;
+  color: #7a9ab0;
+  line-height: 1.6;
+  margin: 0 0 28px 0;
+}
+
+/* ── Alert ──────────────────────────────────── */
+.ul-error {
+  color: #9B0B22;
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  background: #fff0f2;
+  border: 1px solid #fcd0d5;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ── Field Labels ───────────────────────────── */
+.ul-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4a6a7a;
+  margin-bottom: 6px;
+}
+
+.ul-label .required {
+  color: #C8102E;
+  margin-left: 2px;
+}
+
+/* ── Field Groups ───────────────────────────── */
+.ul-field {
+  margin-bottom: 16px;
+}
+
+/* ── Inputs ─────────────────────────────────── */
+.ul-input {
+  width: 100%;
+  height: 50px;
+  border: 1.5px solid #dde8f0;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #111;
+  background: #f8fbfd;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+.ul-input:focus {
+  border-color: #C8102E;
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.08);
+  background: #ffffff;
+}
+
+/* ── Password Wrapper ───────────────────────── */
+.ul-password-wrapper {
+  position: relative;
+}
+
+.ul-password-wrapper .ul-input {
+  padding-right: 44px;
+}
+
+.ul-eye {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aab8c2;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  user-select: none;
+}
+
+/* ── Forgot Password ────────────────────────── */
+.ul-forgot {
+  display: block;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: #C8102E;
+  text-decoration: none;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.ul-forgot:hover {
+  text-decoration: underline;
+}
+
+/* ── Login Button ───────────────────────────── */
+.user-login-btn {
+  width: 100%;
+  height: 52px;
+  background: #C8102E;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.user-login-btn:hover {
+  background: #a50d25;
+  box-shadow: 0 6px 20px rgba(200, 16, 46, 0.28);
+  transform: translateY(-1px);
+}
+
+/* ── Divider ────────────────────────────────── */
+.ul-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ul-divider-line {
+  flex: 1;
+  height: 1px;
+  background: #e8eef2;
+}
+
+.ul-divider-text {
+  font-size: 11px;
+  color: #aab8c2;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+/* ── Footer Links ───────────────────────────── */
+.ul-footer-row {
+  text-align: center;
+  font-size: 13px;
+  color: #7a9ab0;
+  margin-top: 6px;
+}
+
+.ul-footer-row a {
+  color: #C8102E;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ── Trust Badges ───────────────────────────── */
+.ul-trust-badges {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.ul-trust-badge {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(200, 220, 240, 0.8);
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 11px;
+  color: #4a6a7a;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+/* ── Bottom Decoration ──────────────────────── */
+.ul-bottom-art {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 60px,
+    rgba(180, 210, 230, 0.3) 60px,
+    rgba(180, 210, 230, 0.3) 61px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Mobile ─────────────────────────────────── */
+@media (max-width: 480px) {
+  .user-login-page {
+    padding: 24px 16px;
+  }
+
+  .user-login-card {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .ul-trust-badges {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

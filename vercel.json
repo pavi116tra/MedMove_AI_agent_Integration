@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd medmovereactapp && npm install && npm run build",
+  "outputDirectory": "medmovereactapp/build",
+  "framework": "create-react-app",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

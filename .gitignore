@@ -1,0 +1,16 @@
+# Root .gitignore for Medmove Project
+.env
+
+# Frontend
+medmovereactapp/node_modules/
+medmovereactapp/build/
+medmovereactapp/.env
+medmovereactapp/.env.local
+
+# Backend
+backend/node_modules/
+backend/.env
+
+# OS-specific
+.DS_Store
+Thumbs.db

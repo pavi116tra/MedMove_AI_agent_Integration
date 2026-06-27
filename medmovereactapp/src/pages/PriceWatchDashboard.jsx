@@ -1,0 +1,258 @@
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import API_BASE from '../config/api';
+import { AuthContext } from '../context/AuthContext';
+import Navbar from '../Components/Home/Navbar/Navbar';
+import Footer from '../Components/Home/Footer/Footer';
+import BookingConfirmModal from '../Components/BookingConfirmModal';
+import './PriceWatchDashboard.css';
+
+const PriceWatchDashboard = () => {
+  const { isAuthenticated } = useContext(AuthContext);
+  const [watches, setWatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filterType, setFilterType] = useState('all');
+  const navigate = useNavigate();
+
+  // Booking Modal State
+  const [showModal, setShowModal] = useState(false);
+  const [selectedAmbulance, setSelectedAmbulance] = useState(null);
+  const [selectedWatch, setSelectedWatch] = useState(null);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
+    const fetchWatches = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_BASE}/api/price-watch/my-watches`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.data.success) {
+          setWatches(response.data.watches);
+        }
+      } catch (err) {
+        console.error('Failed to load price watches:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWatches();
+  }, [isAuthenticated, navigate]);
+
+  const handleMarkSeen = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(`${API_BASE}/api/price-watch/seen/${id}`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setWatches(prev => prev.map(w => w.id === id ? { ...w, alert_seen: true } : w));
+    } catch (err) {
+      console.error('Failed to mark alert seen:', err);
+    }
+  };
+
+  const handleBookNow = (watch) => {
+    let companyName = 'MedMove Partner';
+    if (watch.alert_message) {
+      const match = watch.alert_message.match(/offered by (.*?)\)/);
+      if (match && match[1]) companyName = match[1];
+    }
+
+    const ambObj = {
+      id: watch.id,
+      company_name: companyName,
+      estimated_total: Number(watch.watched_price),
+      base_charge: Math.round(Number(watch.watched_price) * 0.4),
+      distance_charge: Math.round(Number(watch.watched_price) * 0.6),
+      vehicle_number: 'TN37AB9999',
+      driver_name: 'Assigned Partner Driver',
+      driver_phone: '*** hidden until booked ***',
+      type: watch.vehicle_type,
+      price_per_km: 15
+    };
+
+    setSelectedAmbulance(ambObj);
+    setSelectedWatch(watch);
+    setShowModal(true);
+  };
+
+  const confirmBooking = (patientDetails) => {
+    setShowModal(false);
+    navigate('/payment', {
+      state: { 
+        ambulance: selectedAmbulance, 
+        pickup: selectedWatch.route_from, 
+        drop: selectedWatch.route_to, 
+        date: selectedWatch.travel_date, 
+        time: '10:00 AM', 
+        distance_km: 100,
+        patientDetails
+      }
+    });
+  };
+
+  const filteredWatches = watches.filter(w => {
+    if (filterType === 'all') return true;
+    return w.vehicle_type?.toLowerCase() === filterType.toLowerCase();
+  });
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Navbar />
+      <div className="search-results-page" style={{ flex: 1 }}>
+        
+        {showModal && selectedWatch && (
+          <BookingConfirmModal 
+            ambulance={selectedAmbulance}
+            pickup={selectedWatch.route_from}
+            drop={selectedWatch.route_to}
+            date={selectedWatch.travel_date}
+            time="10:00 AM"
+            onConfirm={confirmBooking}
+            onCancel={() => setShowModal(false)}
+          />
+        )}
+
+        {/* SUMMARY BAR HEADER */}
+        <div className="summary-bar">
+          <div className="route-info" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <button className="modify-btn" onClick={() => navigate(-1)}>
+                ← Back
+              </button>
+              <span className="location" style={{ color: '#CC0000', fontSize: '1.25rem' }}>
+                🔔 Dynamic Price Watch Dashboard
+              </span>
+            </div>
+            <span className="meta">
+              Tracked routes & real-time provider price drop alerts
+            </span>
+          </div>
+        </div>
+
+        {/* FILTER BAR */}
+        <div className="filter-bar">
+          <span>Filter by type:</span>
+          {['all', 'basic', 'oxygen', 'icu'].map(t => (
+            <button
+              key={t}
+              className={filterType === t ? 'filter-btn active' : 'filter-btn'}
+              onClick={() => setFilterType(t)}
+            >
+              {t === 'all' ? 'All Types' :
+               t === 'basic' ? '🚑 Basic (BLS)' :
+               t === 'oxygen' ? '💨 Oxygen (ALS)' : '🏥 ICU'}
+            </button>
+          ))}
+          <span className="results-count">{filteredWatches.length} watches found</span>
+        </div>
+
+        {loading ? (
+          <div className="loading-container">
+            <div className="spinner"></div>
+            <h3>🔍 Loading your price watches...</h3>
+            <p>Please wait a moment</p>
+          </div>
+        ) : filteredWatches.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">🔔</div>
+            <h3>No price watches found</h3>
+            <p>When searching for ambulances, click "Watch Price 🔔" on any vehicle card to track price drops!</p>
+            <button onClick={() => navigate('/')}>🔍 Search Ambulances Now</button>
+          </div>
+        ) : (
+          <div className="cards-grid">
+            {filteredWatches.map((watch) => {
+              const hasAlert = Boolean(watch.alert_message);
+
+              return (
+                <div key={watch.id} className="ambulance-card">
+                  
+                  <div className="card-top">
+                    <span className={`type-badge ${watch.vehicle_type.toLowerCase()}`}>
+                      🚑 {watch.vehicle_type.toUpperCase()}
+                    </span>
+                    <span className="watching-badge" style={{ background: '#f0f4f8', color: '#555', padding: '6px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: '700' }}>
+                      👁 Watching
+                    </span>
+                  </div>
+
+                  <h3 className="company-name" style={{ fontSize: '1.25rem', marginBottom: '14px' }}>
+                    📍 {watch.route_from} <span style={{ color: '#CC0000' }}>──→</span> 🏥 {watch.route_to}
+                  </h3>
+
+                  <div className="amb-details">
+                    <div className="detail-row"><span>🚗 Vehicle Type</span><span>{watch.vehicle_type.toUpperCase()}</span></div>
+                    <div className="detail-row"><span>📅 Travel Date</span><span>{watch.travel_date}</span></div>
+                    <div className="detail-row"><span>📍 Route From</span><span>{watch.route_from}</span></div>
+                    <div className="detail-row"><span>🏥 Route To</span><span>{watch.route_to}</span></div>
+                  </div>
+
+                  <div className="equipment-tags">
+                    <span className="eq-tag">✅ Stretcher</span>
+                    <span className="eq-tag">✅ First Aid Kit</span>
+                    <span className="eq-tag">✅ Oxygen Support</span>
+                  </div>
+
+                  <div className="price-box">
+                    <div className="price-row"><span>Watched Price</span><span>₹{watch.watched_price}</span></div>
+                    <div className="price-total"><span>Estimated Total</span><span>₹{watch.watched_price}</span></div>
+                  </div>
+
+                  {hasAlert ? (
+                    <div>
+                      <div style={{ background: '#fff0f0', border: '1px solid #ffcdd2', borderRadius: '10px', padding: '10px 12px', marginBottom: '12px', fontSize: '0.85rem', color: '#b71c1c' }}>
+                        ⚠️ <strong>Cheaper Option Found!</strong><br />
+                        {watch.alert_message}
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button className="book-btn" style={{ flex: 2 }} onClick={() => handleBookNow(watch)}>
+                          Book Now →
+                        </button>
+                        <button 
+                          style={{
+                            flex: 1,
+                            backgroundColor: '#ffffff',
+                            color: '#2e7d32',
+                            border: '1.5px solid #2e7d32',
+                            borderRadius: '12px',
+                            fontWeight: '700',
+                            fontSize: '13px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '4px'
+                          }} 
+                          onClick={() => handleMarkSeen(watch.id)}
+                          title="Dismiss Alert"
+                        >
+                          Dismiss Alert ✓
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ background: '#f8f9fa', border: '1px dashed #ccc', borderRadius: '10px', padding: '12px', textAlign: 'center', fontSize: '0.82rem', color: '#666', fontStyle: 'italic' }}>
+                      🤖 Agent is actively checking hourly for cheaper providers...
+                    </div>
+                  )}
+
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default PriceWatchDashboard;

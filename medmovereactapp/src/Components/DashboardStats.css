@@ -1,0 +1,59 @@
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 24px 32px;
+}
+
+.stat-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.stat-info h3 {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #888888;
+  margin: 0 0 4px 0;
+}
+
+.stat-info p {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+  color: #111111;
+}
+
+.stat-card:nth-child(4) .stat-info p {
+  color: #C8102E;
+}
+
+.stat-icon.ambulance { background: #fde8e8; }
+.stat-icon.available { background: #e8f8ee; }
+.stat-icon.pending { background: #fff3e0; }
+.stat-icon.earnings { background: #e8f0fe; }
+
+@media (max-width: 768px) {
+  .stats-container {
+    grid-template-columns: 1fr 1fr;
+    margin: 16px;
+  }
+}

@@ -1,0 +1,180 @@
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #cc0000;
+}
+
+.role-selection {
+    text-align: center;
+}
+
+.role-selection h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #333;
+}
+
+.role-selection p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.modal-role-cards {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.modal-role-card {
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 20px;
+    width: 160px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-role-card:hover {
+    border-color: #cc0000;
+    background: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(204, 0, 0, 0.1);
+}
+
+.modal-role-card .role-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.modal-role-card span {
+    font-weight: 600;
+    font-size: 14px;
+    color: #444;
+}
+
+.login-form-container {
+    position: relative;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: #cc0000;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    padding: 0;
+}
+
+.login-form-container h2 {
+    font-size: 22px;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.modal-form-group {
+    margin-bottom: 20px;
+}
+
+.modal-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #444;
+}
+
+.modal-form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.modal-form-group input:focus {
+    border-color: #cc0000;
+    outline: none;
+}
+
+.modal-auth-btn {
+    width: 100%;
+    background: #cc0000;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 10px;
+}
+
+.modal-auth-btn:hover {
+    background: #a30000;
+}
+
+.modal-auth-btn:disabled {
+    background: #ccc;
+}
+
+.modal-error {
+    background: #ffeeee;
+    color: #cc0000;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+.home-8{
+     width:100%;
+     height:30%;
+     /* background-color: khaki; */
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.home8-content{
+    width:90%;
+    height:90%;
+    /* background-color: lime; */
+}
+.home8-h2{
+    width:100%;
+    height:32%;
+    /* background-color: azure; */
+    text-align: center;
+}
+.home8-h2 h2{
+    font-size:26.64px;
+    font-weight: 700;
+    color:rgb(9,30,66);
+}
+.home8-line{
+    width:100%;
+    height:60%;
+    /* background-color: darkmagenta; */
+      display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.home8-line1
+{
+    width:24%;
+    height:90%;
+    /* background-color: cornflowerblue; */
+}
+
+.home8-line2
+{
+    width:24%;
+    height:90%;
+    /* background-color: cornflowerblue; */
+}
+.home8-line3
+{
+    width:24%;
+    height:90%;
+    /* background-color: cornflowerblue; */
+}
+.home8-line4
+{
+    width:24%;
+    height:90%;
+    /* background-color: cornflowerblue; */
+}
+.home8-p{
+    width:100%;
+    height:50%;
+    /* background-color: darkgoldenrod; */
+    font-size: 35.52px;
+    font-style: 700;
+    text-align: center;
+    font-family: "Roboto",sans-serif;
+}
+.home8-p1{
+    width: 100%;
+    height:50%;
+    /* background-color: bisque; */
+    text-align: center;
+}

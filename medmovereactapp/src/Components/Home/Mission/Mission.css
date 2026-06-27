@@ -1,0 +1,131 @@
+.mission-section {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  padding: 80px 60px;
+  overflow: hidden;
+  background-image: url('../../../assets/doctor-mission.png');
+  background-size: cover;
+  background-position: center top;
+}
+
+.mission-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(15, 30, 50, 0.85) 0%, rgba(20, 50, 80, 0.65) 100%);
+  z-index: 0;
+}
+
+.mission-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mission-left {
+  position: relative;
+}
+
+.mission-badge {
+  display: inline-block;
+  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-size: 12px;
+  color: #1a5a7a;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.mission-heading {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  margin: 0;
+}
+
+.mission-muted {
+  color: #5B9ECC;
+}
+
+.mission-body {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.75;
+  max-width: 480px;
+  margin-top: 20px;
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.mission-card {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 16px;
+  padding: 24px 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  text-align: center;
+  color: white;
+  transition: transform 0.2s, background 0.2s;
+  cursor: default;
+}
+
+.mission-card:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-3px);
+}
+
+.mission-card-icon {
+  margin-bottom: 12px;
+}
+
+.mission-card-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: white;
+}
+
+.mission-card-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 3px;
+}
+
+/* MOBILE (max-width: 768px) */
+@media (max-width: 768px) {
+  .mission-inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .mission-section {
+    padding: 48px 24px;
+  }
+  .mission-heading {
+    font-size: 28px;
+  }
+  .mission-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .mission-grid {
+    grid-template-columns: 1fr;
+  }
+}

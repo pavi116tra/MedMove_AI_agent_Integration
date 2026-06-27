@@ -1,0 +1,229 @@
+================================================================================
+                          MEDMOVE - PROJECT DOCUMENTATION
+              Planned Non-Emergency Medical Transport Booking Platform
+     (with AI Journey Advisor, Tamil+English Support, Voice Input, 
+      Full Tamil Chatbot Engine, Security Guardian Agent, Dynamic Pricing Watch
+      Agent, Professional Payment Portal, & WhatsApp PDF Receipt Sharing)
+================================================================================
+
+================================================================================
+1. PROJECT IDEA & PROBLEM STATEMENT
+================================================================================
+
+THE PROBLEM:
+In India, when patients need scheduled, planned medical transport (routine 
+hospital visits, dialysis 3x a week, elderly checkups, hospital discharge, 
+or post-surgery follow-ups), families face a nightmare:
+
+  - No centralized platform to book scheduled ambulances
+  - Calling multiple ambulance providers one by one
+  - No price transparency — drivers quote random amounts
+  - Families don't know which vehicle type matches their planned trip
+  - Language barriers for non-English speakers (e.g. Tamil speaking families)
+  - Ambulance providers have no digital system to manage fleets and schedules
+  - Fluctuating ambulance rates and unexpected price spikes for frequent journeys
+  - Security threats: Brute force attacks, OTP abuse, injection, data scraping
+
+MedMove is NOT an emergency service (like 108/102). It is a PLANNED transport 
+booking platform — like RedBus or Ola for hospital visits.
+
+THE SOLUTION — MEDMOVE:
+MedMove is a full-stack web application that connects PATIENTS with AMBULANCE 
+PROVIDERS for comfortable, scheduled medical transport across Tamil Nadu.
+
+  PATIENT & FAMILY SIDE:
+    - Search scheduled transport by pickup city, destination city, date, and time
+    - AI Transport Advisor tool with Speech-to-Text Voice Input 🎤
+    - Full Bilingual Support: Switch seamlessly between English & Tamil (தமிழ்)
+    - Auto-selects vehicle type based on planned transport needs
+    - Transparent pricing: Base Charge + (Distance KM x Rate per KM)
+    - 🔔 DYNAMIC PRICING WATCH AGENT: Set price watches on search routes & receive in-app alerts when cheaper provider rates appear
+    - Interactive same-page filtering for cheaper vehicle alternatives
+    - Sleek Booking Modal & Professional UPI Payment Gateway with interactive QR scan and click-to-copy UPI ID
+    - Automated PDF Receipt generation with 1-click WhatsApp sharing 📱📄
+    - Receive booking confirmation with driver details & journey preparation guide
+    - 24/7 AI Booking Assistant Chatbot to assist with website navigation
+
+  PROVIDER SIDE:
+    - Register ambulance company with license verification
+    - Add/edit/delete vehicles in their fleet
+    - Set custom pricing (base charge + per km rate)
+    - View incoming bookings (accept/reject/complete)
+    - Track earnings with detailed reports
+
+  SECURITY GUARDIAN AGENT SIDE (BACKEND & CLI):
+    - Multi-agent Security System running silently in the background
+    - Protects against Brute Force, OTP Abuse, SQLi/XSS Injection, & Data Scraping
+    - Instant Discord Alerts to owner on attack detection
+    - MCP Server exposing 5 security tools for AI agents
+    - Command Line Interface (CLI) for real-time security inspection
+
+================================================================================
+2. WHAT MAKES MEDMOVE SPECIAL & UNIQUE
+================================================================================
+
+  a) 📅 PLANNED TRANSPORT FOCUS (No Emergency Crisis Language):
+     MedMove sets clear expectations: planned medical journeys only.
+     If a user describes a medical emergency (e.g. accident, heart attack in progress),
+     the AI engine automatically detects it, displays a polite neutral disclaimer,
+     and directs them to emergency services (108).
+
+  b) 🤖 DYNAMIC PRICING WATCH AGENT FEATURE:
+     When searching for ambulances, patients can click "Watch Price 🔔" on any 
+     vehicle card. The system saves the route, travel date, vehicle type, and current price.
+     A background agent runs hourly on the server (`runPricingAgent`), querying active 
+     watches against live provider search algorithms. If a cheaper provider lists a vehicle,
+     an in-app banner (`PriceDropAlert.jsx`) and dashboard card (`PriceWatchDashboard.jsx`) 
+     highlight the price drop instantly!
+
+  c) 🎨 ALIGNED WATCH DASHBOARD & SAME-PAGE FILTERING:
+     Clicking "Watch Price 🔔" instantly filters and displays cheaper vehicle options on 
+     the same SearchResults page with an interactive reset banner. The separate 
+     `PriceWatchDashboard.jsx` matches `SearchResults.jsx` 100% in design — featuring 
+     the identical white summary header box, route information, exact card dimensions, 
+     badges (`🚑 BASIC` / `👁 Watching`), equipment tags, gray pricing breakdown box, 
+     and status action buttons (`Book Now →` & `Dismiss Alert ✓`).
+
+  d) 💳 PROFESSIONAL PAYMENT GATEWAY & ANIMATED CONFIRMED STATE:
+     Redesigned `Payment.jsx` featuring a red outline back button, centered title, 
+     green pill secure badge (`🔒 100% Secure`), soft red gradient total box (`#fff5f5`), 
+     blue demo banner (`ℹ️`), bordered QR container with 3 UPI logos (`GPay | PhonePe | Paytm`), 
+     click-to-copy UPI ID (`medmove@paytm`) with a 2-second tooltip, and a pulsing 
+     confirm button (`🔒 I Have Scanned — Confirm Payment`). Upon payment completion, 
+     an animated 80px green SVG stroke checkmark circle draws itself with green success 
+     typography (`#2e7d32`) and animated loading dots.
+
+  e) 📱 AUTOMATED PDF RECEIPT & WHATSAPP SHARING FLOW:
+     Integrated `jsPDF` library on `BookingSuccess.jsx`. Clicking "Share Booking Details on WhatsApp" 
+     generates a high-contrast, crystal-clear PDF receipt (`MediRide_Receipt_MED0018.pdf`) 
+     with clean light gray boxes (`#f8fafc`) and slate typography (`#1E293B`). Downloads the PDF 
+     file locally and automatically opens WhatsApp pre-populated with an exact structured 
+     confirmation message ready to attach.
+
+  f) 🌐 FULL BILINGUAL SUPPORT & TAMIL KEYWORD ENGINE (தமிழ்):
+     Users can toggle between English and Tamil [EN] [தமிழ்] across the AI search bar 
+     and the Chatbot. The backend AI triage controller (`aiTriageController.js`) 
+     features a Unicode-based Tamil detector (`[\u0B80-\u0BFF]`) that processes 
+     Tamil text queries for ambulance types, pricing, booking, and medical triage.
+
+  g) 🎤 VOICE INPUT (Speech to Text):
+     Integrated Web Speech API allowing users to speak their transport needs in 
+     English or Tamil. Real-time transcript updates the search bar and chat input.
+
+  h) 🤖 AI TRANSPORT ADVISOR:
+     Analyzes patient transport descriptions using Google Gemini AI and 
+     recommends the most comfortable, cost-effective vehicle match:
+       - Basic (BLS): Stable patients, dialysis, routine checkups
+       - Oxygen (ALS): Patients needing oxygen support during travel
+       - ICU (Mobile ICU): Continuous monitoring during hospital-to-hospital transfer
+
+  i) 💬 FLOATING BOOKING ASSISTANT CHATBOT:
+     Fixed bottom-right assistant providing customer support (like RedBus/Ola support).
+     Answers questions on booking steps, pricing formulas, vehicle types, and provider 
+     registration in both Tamil and English.
+
+  j) 🛡️ MEDMOVE SECURITY GUARDIAN AGENT:
+     A silent background security agent monitoring platform health in real time.
+     Covers 3 major capstone architectural features: Multi-Agent System, MCP Server, and Agent CLI.
+
+================================================================================
+3. DYNAMIC PRICING WATCH AGENT ARCHITECTURE
+================================================================================
+
+  - Sequelize Model: `backend/models/priceWatch.js` (`price_watches` table)
+    Fields: `id`, `user_id`, `route_from`, `route_to`, `travel_date`, `vehicle_type`, `watched_price`, `alert_message`, `alert_seen`
+
+  - Controller: `backend/controllers/pricingWatchController.js`
+    - `addWatch`: Saves new watch record for logged in user.
+    - `getMyWatches`: Fetches all tracked watches for user.
+    - `markAlertSeen`: Updates alert status to read (`alert_seen = true`).
+    - `runPricingAgent`: Background worker that executes reusable search logic (`executeAmbulanceSearch`), compares prices, and generates alert messages.
+
+  - API Routes (`backend/routes/pricingWatchRoutes.js`):
+    - `POST /api/price-watch/add` (JWT protected)
+    - `GET /api/price-watch/my-watches` (JWT protected)
+    - `PATCH /api/price-watch/seen/:id` (JWT protected)
+
+  - Server Integration (`backend/server.js`):
+    - Starts agent on server boot and runs `setInterval` every 60 minutes.
+
+  - Frontend Components:
+    - `PriceDropAlert.jsx` & `.css`: Top banner alerting users of unread price drops (strictly rendered when `alert_seen === false` and `alert_message` exists).
+    - `PriceWatchDashboard.jsx` & `.css`: Full card-layout dashboard at `/price-watch` matching SearchResults styling.
+    - `SearchResults.jsx`: Added "Watch Price 🔔" button with same-page filtering and persistent info note.
+
+================================================================================
+4. COMPLETE FILE STRUCTURE — EVERY FILE EXPLAINED
+================================================================================
+
+Project_Medmove-main/
+│
+├── package.json                    # Root scripts for starting servers
+├── explain_medmove.txt             # Project documentation (this file)
+│
+├── backend/                        # 🔧 EXPRESS.JS BACKEND (REST API)
+│   ├── server.js                   # Main API entry point & hourly Pricing Watch Agent interval
+│   ├── mcp-server.js               # MCP SERVER (JSON-RPC over stdio)
+│   ├── security-cli.js             # SECURITY CLI TOOL (`node security-cli.js status`)
+│   ├── .env                        # Credentials (MySQL, JWT, GEMINI_API_KEY, SECURITY_SECRET)
+│   ├── middleware/                 
+│   │   ├── auth.js                 # JWT verification middleware
+│   │   └── securityGuard.js        # SECURITY GUARDIAN AGENT MIDDLEWARE & DETECTORS
+│   ├── models/                     # 📊 SEQUELIZE ORM MODELS (8 tables)
+│   │   ├── user.js                 # Patients table
+│   │   ├── provider.js             # Ambulance companies table
+│   │   ├── ambulance.js            # Vehicle fleet table
+│   │   ├── booking.js              # Booking records table
+│   │   ├── otplog.js               # Phone OTP verification table
+│   │   ├── ambulanceSlot.js        # Slot blocking table
+│   │   ├── providerEarning.js      # Provider earnings table
+│   │   └── priceWatch.js           # Price watch tracking table
+│   ├── controllers/                # 🎯 BUSINESS LOGIC & AI
+│   │   ├── auth_controller.js      # Authentication & OTP
+│   │   ├── providerController.js   # Provider fleet & stats
+│   │   ├── ambulanceController.js  # Search & reusable executeAmbulanceSearch helper
+│   │   ├── bookingController.js    # Booking transaction & WhatsApp URL builder
+│   │   ├── aiTriageController.js   # AI Transport Advisor & Tamil ChatBot engine
+│   │   └── pricingWatchController.js # Dynamic Pricing Watch Agent & alert logic
+│   └── routes/                     # 🛣️ API ROUTES
+│       ├── authRoutes.js           # Auth routes
+│       ├── providerRoutes.js       # Provider dashboard routes
+│       ├── ambulanceRoutes.js      # Search routes
+│       ├── bookingRoutes.js        # Booking routes
+│       ├── aiRoutes.js             # AI Triage & Chat routes
+│       ├── securityRoutes.js       # SECURITY GUARDIAN API ROUTES
+│       └── pricingWatchRoutes.js   # PRICE WATCH API ROUTES (/api/price-watch)
+│
+└── medmovereactapp/                # 🎨 REACT.JS FRONTEND
+    └── src/
+        ├── App.js / Routing.jsx    # Router, /price-watch route & global <PriceDropAlert /> mount
+        ├── config/api.js           # API Base URL config
+        ├── context/AuthContext.jsx # Authentication context
+        ├── Components/
+        │   ├── Home/
+        │   │   ├── Navbar/         # Clean AI-Powered badge without underline
+        │   │   └── (14 sections...)
+        │   ├── BookingConfirmModal.jsx # 🆕 Centered booking confirmation modal (Name, Age, Condition)
+        │   ├── PriceDropAlert/     # Top banner notifying of price drop alerts
+        │   │   ├── PriceDropAlert.jsx
+        │   │   └── PriceDropAlert.css
+        │   └── ChatBot/            # BILINGUAL CHATBOT WIDGET
+        └── pages/
+            ├── SearchResults.jsx   # Watch Price 🔔 button, same-page filtering & info note
+            ├── PriceWatchDashboard.jsx # Tracked watches dashboard matched 100% to SearchResults UI
+            ├── Payment.jsx         # 🆕 Redesigned Payment Gateway (Gradient box, UPI copy, animated checkmark)
+            ├── BookingSuccess.jsx  # 🆕 PDF Receipt generation (jsPDF) & 1-click WhatsApp sharing
+            └── ProviderDashboard.jsx# Fleet management panel
+
+================================================================================
+5. HOW TO RUN THE PROJECT & SECURITY TOOLS
+================================================================================
+
+  1. Start Backend Server:    cd backend && node server.js
+  2. Run Security CLI Tool:   cd backend && node security-cli.js status
+  3. Run MCP Server (stdio):  cd backend && npm run mcp
+  4. Start Frontend React App: cd medmovereactapp && npm start
+
+================================================================================
+                              END OF DOCUMENTATION
+================================================================================

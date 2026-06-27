@@ -1,0 +1,81 @@
+.sixth-section {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #fff;
+}
+
+.sixth-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a1a;
+    font-family: "Poppins", sans-serif;
+    margin-bottom: 10px;
+}
+
+.sixth-subtitle {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 40px;
+    font-family: "Poppins", sans-serif;
+}
+
+.sixth-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.sixth-card {
+    padding: 30px 20px;
+    background: #fffaf9;
+    border-radius: 15px;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #f9ecec;
+}
+
+.sixth-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(255, 77, 77, 0.1);
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background-color: #ff4d4d;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(255, 77, 77, 0.3);
+}
+
+.sixth-card-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    font-family: "Poppins", sans-serif;
+}
+
+.sixth-card-text {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+    font-family: "Poppins", sans-serif;
+}
+
+@media (max-width: 768px) {
+    .sixth-grid {
+        grid-template-columns: 1fr;
+    }
+}

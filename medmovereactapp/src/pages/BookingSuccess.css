@@ -1,0 +1,172 @@
+.success-page {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.success-header .checkmark {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.success-header h1 { color: #2e7d32; margin-bottom: 0.5rem; }
+.success-header p { color: #666; margin-bottom: 2rem; }
+
+.booking-id-box {
+  background: #f1f8e9;
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border: 1px solid #c5e1a5;
+}
+
+.booking-id-box strong { color: #2e7d32; font-size: 1.2rem; }
+
+.confirm-card {
+  text-align: left;
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+}
+
+.confirm-card h3 { font-size: 1rem; color: #888; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.confirm-row span:last-child { font-weight: 700; color: #1a1a2e; }
+
+.confirm-row.total {
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: #CC0000;
+}
+
+.whatsapp-notice {
+  background: #e1f5fe;
+  color: #0277bd;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 2rem 0;
+  font-weight: 600;
+}
+
+.success-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.home-btn {
+  flex: 1;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  background: #1a1a2e;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.home-btn:hover { background: #333; transform: scale(1.02); }
+
+.ai-guide-section {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.ai-guide-title {
+  font-size: 1.1rem;
+  color: #1a1a2e;
+  margin-bottom: 1rem;
+}
+
+.ai-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.ai-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+.ai-card h4 {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.ai-card p {
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.ai-card.emergency {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.ai-card.emergency h4 {
+  color: #dc2626;
+}
+
+.ai-card.emergency strong {
+  display: block;
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.ai-card.emergency p {
+  color: #991b1b;
+}
+
+.whatsapp-share-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  background: #25D366;
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.whatsapp-share-btn:hover {
+  background: #128C7E;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .ai-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

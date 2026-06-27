@@ -1,0 +1,101 @@
+.home-5 {
+    width: 100%;
+    padding: 80px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #e8f4fb;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Crect width='56' height='100' fill='%23ddeef8'/%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0-2l26-15V18L28 2 2 18v31L28 64z' fill='%23c8e0f0' fill-opacity='0.4'/%3E%3C/svg%3E");
+    background-size: 56px 100px;
+}
+
+.home5-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.home5-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a1a;
+    font-family: "Poppins", sans-serif;
+    margin-bottom: 10px;
+}
+
+.home5-header p {
+    font-size: 18px;
+    color: #666;
+    font-family: "Poppins", sans-serif;
+}
+
+.home5-content {
+    width: 90%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.part1 {
+    width: 100%;
+    height: 380px;
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.part1:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(255, 77, 77, 0.15);
+}
+
+.h5-img {
+    width: 100%;
+    height: 65%;
+}
+
+.h5-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+.h5-tools {
+    width: 100%;
+    height: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+
+.tools-text {
+    width: 100%;
+    text-align: center;
+}
+
+.tools-text h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    font-family: "Poppins", sans-serif;
+    margin-bottom: 8px;
+}
+
+.tools-text p {
+    font-size: 14px;
+    color: #666;
+    font-family: "Poppins", sans-serif;
+    line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+    .home5-content {
+        grid-template-columns: 1fr;
+    }
+}

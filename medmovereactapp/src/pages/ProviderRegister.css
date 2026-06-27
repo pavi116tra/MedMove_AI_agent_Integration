@@ -1,0 +1,501 @@
+/* ============================================
+   ProviderRegister.css — Full Redesign
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── Page Shell ─────────────────────────────── */
+.register-page {
+  min-height: 100vh;
+  background-color: #e8f4fb;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Crect width='56' height='100' fill='%23ddeef8'/%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0-2l26-15V18L28 2 2 18v31L28 64z' fill='%23c8e0f0' fill-opacity='0.4'/%3E%3C/svg%3E");
+  background-size: 56px 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Top Logo ───────────────────────────────── */
+.register-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.register-logo-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #C8102E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.register-logo-text {
+  font-size: 22px;
+  font-weight: 800;
+  color: #C8102E;
+  letter-spacing: -0.01em;
+}
+
+.register-tagline {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7a9ab0;
+  text-align: center;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+/* ── Card ───────────────────────────────────── */
+.register-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 80, 140, 0.10);
+  padding: 36px 40px;
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid rgba(200, 220, 240, 0.6);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Step Progress Bar ──────────────────────── */
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 28px;
+}
+
+.step-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-circle.active {
+  background: #C8102E;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(200, 16, 46, 0.30);
+}
+
+.step-circle.inactive {
+  background: #f0f4f8;
+  border: 2px solid #d0dde8;
+  color: #aab8c2;
+  font-weight: 600;
+}
+
+.step-label {
+  font-size: 12px;
+  margin-top: 6px;
+  text-align: center;
+}
+
+.step-label.active {
+  font-weight: 700;
+  color: #C8102E;
+}
+
+.step-label.inactive {
+  color: #aab8c2;
+}
+
+.step-connector {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to right, #C8102E 0%, #e0e8f0 100%);
+  margin: 0 12px;
+  margin-bottom: 20px;
+  align-self: flex-start;
+  margin-top: 18px;
+  min-width: 40px;
+}
+
+/* ── Card Header Badge ──────────────────────── */
+.reg-badge {
+  display: inline-block;
+  background: #fff0f2;
+  border: 1px solid #fcd0d5;
+  border-radius: 50px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9B0B22;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.reg-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0A0F1E;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.reg-subtitle {
+  font-size: 13px;
+  color: #7a9ab0;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+}
+
+/* ── Alert Messages ─────────────────────────── */
+.reg-error {
+  color: #9B0B22;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: #fff0f2;
+  border: 1px solid #fcd0d5;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.reg-dev-otp {
+  color: #856404;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: #FFF3CD;
+  border: 1px solid #FFEEBA;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ── Field Labels ───────────────────────────── */
+.reg-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4a6a7a;
+  margin-bottom: 6px;
+}
+
+.reg-label .required {
+  color: #C8102E;
+  margin-left: 2px;
+}
+
+/* ── Field Groups ───────────────────────────── */
+.reg-field {
+  margin-bottom: 16px;
+}
+
+/* ── Inputs ─────────────────────────────────── */
+.reg-input {
+  width: 100%;
+  height: 50px;
+  border: 1.5px solid #dde8f0;
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 14px;
+  color: #111;
+  background: #f8fbfd;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+.reg-input:focus {
+  border-color: #C8102E;
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.08);
+  background: #ffffff;
+}
+
+.reg-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* select inherits reg-input but needs height auto for options */
+select.reg-input {
+  height: 50px;
+  cursor: pointer;
+  appearance: auto;
+}
+
+/* file input */
+input[type="file"].reg-input {
+  height: auto;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #4a6a7a;
+  cursor: pointer;
+}
+
+/* ── Phone + OTP Row ────────────────────────── */
+.phone-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.phone-row .reg-input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.send-otp-btn {
+  height: 50px;
+  padding: 0 20px;
+  background: #0A0F1E;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+  font-family: 'Inter', sans-serif;
+  flex-shrink: 0;
+}
+
+.send-otp-btn:hover {
+  background: #1a2f4a;
+}
+
+.send-otp-btn.sent {
+  background: #e8f8ee;
+  color: #1a7a3a;
+  border: 1.5px solid #b2dfc0;
+  cursor: default;
+  font-weight: 600;
+}
+
+.send-otp-btn.sent:hover {
+  background: #e8f8ee;
+}
+
+/* ── OTP Verify Row ─────────────────────────── */
+.otp-verify-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.otp-verify-row .reg-input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.verify-otp-btn {
+  height: 50px;
+  padding: 0 20px;
+  background: #1a7a3a;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.verify-otp-btn:hover {
+  background: #145e2c;
+}
+
+/* ── Phone verified badge ───────────────────── */
+.phone-verified {
+  font-size: 13px;
+  color: #1a7a3a;
+  font-weight: 500;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Next / Submit Button ───────────────────── */
+.next-btn {
+  width: 100%;
+  height: 52px;
+  background: #C8102E;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.next-btn:hover {
+  background: #a50d25;
+  box-shadow: 0 6px 20px rgba(200, 16, 46, 0.28);
+  transform: translateY(-1px);
+}
+
+/* ── Back Button ────────────────────────────── */
+.back-btn {
+  width: 100%;
+  height: 48px;
+  background: #f5f8fa;
+  color: #4a6a7a;
+  border: 1.5px solid #dde8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.back-btn:hover {
+  background: #eaeff3;
+}
+
+/* ── Footer Link ────────────────────────────── */
+.reg-footer {
+  text-align: center;
+  font-size: 13px;
+  color: #7a9ab0;
+  margin-top: 16px;
+}
+
+.reg-footer a {
+  color: #C8102E;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ── Trust Badges ───────────────────────────── */
+.trust-badges {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.trust-badge {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(200, 220, 240, 0.8);
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 11px;
+  color: #4a6a7a;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+/* ── Success Screen ─────────────────────────── */
+.success-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 80, 140, 0.10);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 440px;
+  border: 1px solid rgba(200, 220, 240, 0.6);
+  text-align: center;
+}
+
+.success-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.success-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0A0F1E;
+  margin: 0 0 14px 0;
+}
+
+.success-text {
+  font-size: 14px;
+  color: #7a9ab0;
+  line-height: 1.7;
+  margin: 0 0 30px 0;
+}
+
+.success-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  padding: 0 36px;
+  background: #C8102E;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.success-btn:hover {
+  background: #a50d25;
+  box-shadow: 0 6px 20px rgba(200, 16, 46, 0.28);
+  transform: translateY(-1px);
+}
+
+/* ── Mobile ─────────────────────────────────── */
+@media (max-width: 480px) {
+  .register-page {
+    padding: 24px 16px;
+  }
+
+  .register-card {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .success-card {
+    padding: 32px 20px;
+  }
+
+  .trust-badges {
+    justify-content: center;
+  }
+}

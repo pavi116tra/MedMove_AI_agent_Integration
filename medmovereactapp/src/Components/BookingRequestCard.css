@@ -1,0 +1,145 @@
+.booking-card.detail-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: transform 0.3s;
+}
+
+.booking-card.detail-card:hover {
+  transform: translateY(-5px);
+}
+
+.booking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.8rem;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.status-badge.pending { background: #e3f2fd; color: #1976d2; }
+.status-badge.confirmed { background: #fff3cd; color: #856404; }
+.status-badge.completed { background: #e8f5e9; color: #2e7d32; }
+
+.booking-id {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: #888;
+}
+
+.booking-sections-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.card-section h4 {
+  font-size: 0.8rem;
+  color: #999;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.card-section p {
+  font-size: 0.95rem;
+  color: #333;
+  margin: 0.2rem 0;
+}
+
+.tags-row {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.tag-pill {
+  background: #f5f5f5;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #666;
+}
+
+.card-footer-info {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fare-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fare-display span:first-child {
+  color: #666;
+  font-weight: 600;
+}
+
+.fare-amt {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #b71c1c;
+}
+
+.complete-btn.full-width {
+  width: 100%;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.complete-btn.full-width:hover {
+  background: #1b5e20;
+}
+
+.completed-label {
+  text-align: center;
+  color: #2e7d32;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: #e8f5e9;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.booking-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.accept-btn, .reject-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.accept-btn { background: #2e7d32; color: white; }
+.reject-btn { background: #f5f5f5; color: #666; }

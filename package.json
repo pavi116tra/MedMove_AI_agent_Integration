@@ -1,0 +1,12 @@
+{
+  "name": "project-medmove-root",
+  "version": "1.0.0",
+  "description": "Root configuration for MedMove project",
+  "scripts": {
+    "start-backend": "cd backend && npm install && npm start",
+    "build-frontend": "cd medmovereactapp && npm install && npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
