@@ -72,6 +72,24 @@ The agent also detects emergency keywords (accident, heart attack) and redirects
 
 *Tamil Unicode Detection:* `const isTamil = /[\u0B80-\u0BFF]/.test(description)` — processes Tamil text natively without translation.
 
+#### 🗣️ Real-Time Tamil Language AI Assistant — Live Evidence
+
+When a user speaks or types in Tamil, MedMove automatically understands the input and responds entirely in Tamil across both the AI Triage Advisor and the Booking Assistant Chatbot.
+
+**1. AI Triage Advisor ("Analyse" Box):**
+- **User input in Tamil:** *"என்னுடைய பாட்டிக்கு கால்ல அடிபட்டு இருக்கு"* (My grandmother hurt her leg)
+- **AI Response:** Recommends a **Basic (BLS) Ambulance** and explains in clear Tamil:
+  - *Reason:* *"நிலையான நோயாளர்களுக்கு Basic (BLS) ஆம்புலன்ஸ் பொருத்தமானது — வசதியான மற்றும் மலிவான பயணம்."*
+  - *Preparation Tips:* *"ஆதார் அட்டை மற்றும் மருத்துவ ஆவணங்கள் எடுத்துச் செல்லவும்..."*
+
+![AI Triage Tamil Recommendation Evidence](docs/images/triage_tamil_evidence.png)
+
+**2. MedMove Booking Assistant (Chatbot):**
+- **User input in Tamil:** *"எப்படி மெட்ரோவில் ஆம்புலன்ஸ் புக் பண்ண வேண்டும்"* (How to book an ambulance)
+- **AI Response:** Automatically replies step-by-step in Tamil explaining the 7-step booking process cleanly.
+
+![Chatbot Tamil Booking Assistance Evidence](docs/images/chatbot_tamil_evidence.png)
+
 ### Agent 2 — Dynamic Pricing Watch Agent
 
 - Patient clicks "Watch Price 🔔" on any search result card
