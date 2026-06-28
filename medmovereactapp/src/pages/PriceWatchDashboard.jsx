@@ -68,15 +68,22 @@ const PriceWatchDashboard = () => {
     }
   };
 
-  const handleMarkSeen = async (id) => {
+  const handleDismiss = async (watchId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`${API_BASE}/api/price-watch/seen/${id}`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setWatches(prev => prev.filter(w => w.id !== id));
-    } catch (err) {
-      console.error('Dismiss error:', err.response?.data);
+      await axios.patch(
+        `${API_BASE}/api/price-watch/seen/${watchId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // Remove from local state immediately / mark seen
+      setWatches(prev => prev.map(w => 
+        w.id === watchId 
+          ? { ...w, alert_seen: true, alert_message: null }
+          : w
+      ));
+    } catch (error) {
+      console.error('Dismiss error:', error.response?.data || error.message);
     }
   };
 
@@ -248,7 +255,7 @@ const PriceWatchDashboard = () => {
                     <div className="price-total"><span>Estimated Total</span><span>₹{watch.watched_price}</span></div>
                   </div>
 
-                  {hasAlert ? (
+                  {watch.alert_message && !watch.alert_seen ? (
                     <div>
                       <div style={{ background: '#fff0f0', border: '1px solid #ffcdd2', borderRadius: '10px', padding: '10px 12px', marginBottom: '12px', fontSize: '0.85rem', color: '#b71c1c' }}>
                         ⚠️ <strong>Cheaper Option Found!</strong><br />
@@ -274,7 +281,7 @@ const PriceWatchDashboard = () => {
                             justifyContent: 'center',
                             gap: '4px'
                           }} 
-                          onClick={() => handleMarkSeen(watch.id)}
+                          onClick={() => handleDismiss(watch.id)}
                           title="Dismiss Alert"
                         >
                           Dismiss Alert ✓

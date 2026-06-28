@@ -38,15 +38,20 @@ const calculateDistance = (pickup, drop) => {
 };
 
 // Reusable search helper for HTTP routes & Background Pricing Agent
-const executeAmbulanceSearch = async ({ pickup, drop, type, date, time }) => {
-  if (!pickup || !drop) return { distance_km: 0, results: [] };
+const executeAmbulanceSearch = async ({ pickup, drop, from_city, to_city, type, vehicle_type, date, travel_date, time }) => {
+  const pLocation = pickup || from_city;
+  const dLocation = drop || to_city;
+  const vType = type || vehicle_type;
+  const tDate = date || travel_date;
+
+  if (!pLocation || !dLocation) return { distance_km: 0, results: [] };
 
   const whereConditions = { status: 'available' };
-  if (type && type.toLowerCase() !== 'all') {
-    whereConditions.type = type.toLowerCase();
+  if (vType && vType.toLowerCase() !== 'all') {
+    whereConditions.type = vType.toLowerCase();
   }
 
-  whereConditions.base_location = pickup.trim().toLowerCase();
+  whereConditions.base_location = pLocation.trim().toLowerCase();
 
   const ambulances = await Ambulance.findAll({
     where: whereConditions,

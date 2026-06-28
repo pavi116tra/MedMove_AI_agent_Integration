@@ -62,28 +62,34 @@ exports.getMyWatches = async (req, res) => {
 // @route   PATCH /api/price-watch/seen/:id
 exports.markAlertSeen = async (req, res) => {
   try {
+    const { id } = req.params;
     const userId = req.user.id;
-    const watchId = req.params.id;
-
-    const watch = await PriceWatch.findOne({
-      where: { id: watchId, user_id: userId }
+    
+    const watch = await PriceWatch.findOne({ 
+      where: { id, user_id: userId } 
     });
-
+    
     if (!watch) {
-      return res.status(404).json({ success: false, message: 'Price watch not found.' });
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Watch not found' 
+      });
     }
-
+    
     watch.alert_seen = true;
+    watch.alert_message = null;
     await watch.save();
-
-    res.json({
-      success: true,
-      message: 'Alert marked as seen.',
-      watch
+    
+    return res.json({ 
+      success: true, 
+      message: 'Alert dismissed' 
     });
   } catch (error) {
-    console.error('❌ Mark Alert Seen Error:', error);
-    res.status(500).json({ success: false, message: 'Failed to update alert status.' });
+    console.error('Mark seen error:', error);
+    return res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
   }
 };
 
@@ -103,63 +109,67 @@ exports.triggerAgent = async (req, res) => {
 exports.runPricingAgent = async () => {
   console.log('🤖 [Pricing Watch Agent] Running price comparison agent inspection...');
   try {
-    // 1. Get active watches
-    const watches = await PriceWatch.findAll();
-    if (!watches || watches.length === 0) {
+    const activeWatches = await PriceWatch.findAll();
+    if (!activeWatches || activeWatches.length === 0) {
       console.log('🤖 [Pricing Watch Agent] No active price watches found.');
       return;
     }
 
-    let alertsTriggered = 0;
+    for (const watch of activeWatches) {
+      try {
+        // Search for ambulances on this route
+        const searchRes = await executeAmbulanceSearch({
+          from_city: watch.route_from,
+          to_city: watch.route_to,
+          travel_date: watch.travel_date,
+          vehicle_type: watch.vehicle_type,
+          pickup: watch.route_from,
+          drop: watch.route_to,
+          type: watch.vehicle_type
+        });
 
-    for (const watch of watches) {
-      // Skip if watch is already dismissed by user
-      if (watch.alert_seen && watch.alert_message) continue;
+        const results = Array.isArray(searchRes) ? searchRes : (searchRes?.results || []);
 
-      // 2. Run executeAmbulanceSearch with the route
-      const { distance_km, results } = await executeAmbulanceSearch({
-        pickup: watch.route_from,
-        drop: watch.route_to,
-        type: watch.vehicle_type,
-        date: watch.travel_date
-      });
+        if (!results || results.length === 0) continue;
 
-      if (results && results.length > 0) {
-        // 3. Find the MINIMUM price ambulance from results using reduce
-        const minPriceAmbulance = results.reduce((min, amb) => {
-          const ambPrice = Number(amb.estimated_total != null ? amb.estimated_total : ((amb.base_charge || 0) + ((amb.price_per_km || amb.per_km_rate || 15) * 100)));
-          const minPrice = Number(min.estimated_total != null ? min.estimated_total : ((min.base_charge || 0) + ((min.price_per_km || min.per_km_rate || 15) * 100)));
-          return ambPrice < minPrice ? amb : min;
-        }, results[0]);
+        // Find the MINIMUM price from all results
+        let minPrice = Infinity;
+        let cheapestAmbulance = null;
 
-        // 4. Calculate watched price total & minimum found total
-        const watchedTotal = Number(watch.watched_price);
-        const minTotal = Number(minPriceAmbulance.estimated_total != null ? minPriceAmbulance.estimated_total : ((minPriceAmbulance.base_charge || 0) + ((minPriceAmbulance.price_per_km || minPriceAmbulance.per_km_rate || 15) * 100)));
-
-        // 5. Compare: Trigger alert if minimum found is strictly less than watched price
-        if (minTotal < watchedTotal) {
-          const vehicleTypeStr = (minPriceAmbulance.type || minPriceAmbulance.vehicle_type || watch.vehicle_type).toUpperCase();
-          const alertMsg = `Price drop! ${vehicleTypeStr} ambulance now available at ₹${minTotal} (you watched ₹${watchedTotal})`;
-          
-          if (watch.alert_message !== alertMsg) {
-            watch.alert_message = alertMsg;
-            watch.alert_seen = false;
-            await watch.save();
-            alertsTriggered++;
-            console.log(`🤖 [Pricing Watch Agent] Alert triggered for watch #${watch.id}: ₹${minTotal} < ₹${watchedTotal}`);
+        for (const amb of results) {
+          const distanceKm = 100; // default
+          const base = parseFloat(amb.base_charge || 0);
+          const rate = parseFloat(amb.per_km_rate || amb.price_per_km || 15);
+          const total = amb.estimated_total != null ? parseFloat(amb.estimated_total) : (base + (rate * distanceKm));
+          if (total < minPrice) {
+            minPrice = total;
+            cheapestAmbulance = amb;
           }
+        }
+
+        const watchedPrice = parseFloat(watch.watched_price);
+
+        // ONLY alert if strictly LESS THAN watched price
+        // Do NOT alert if equal or higher
+        if (cheapestAmbulance && minPrice < watchedPrice) {
+          const vehicleTypeStr = (cheapestAmbulance.vehicle_type || cheapestAmbulance.type || watch.vehicle_type).toUpperCase();
+          watch.alert_message = `Price drop! ${vehicleTypeStr} ambulance now available at ₹${Math.round(minPrice)} (you watched ₹${Math.round(watchedPrice)})`;
+          watch.alert_seen = false;
+          await watch.save();
+          console.log(`Alert set for watch ${watch.id}: ₹${minPrice} < ₹${watchedPrice}`);
         } else {
-          // Clear stale alert message if min price is not below watched price
-          if (watch.alert_message !== null) {
+          // Clear any old alert if price is no longer cheaper
+          if (watch.alert_message && minPrice >= watchedPrice) {
             watch.alert_message = null;
             watch.alert_seen = true;
             await watch.save();
+            console.log(`Alert cleared for watch ${watch.id}: ₹${minPrice} >= ₹${watchedPrice}`);
           }
         }
+      } catch (err) {
+        console.error(`Error processing watch ${watch.id}:`, err.message);
       }
     }
-
-    console.log(`🤖 [Pricing Watch Agent] Finished checking watches. Alerts triggered/updated: ${alertsTriggered}`);
   } catch (error) {
     console.error('❌ [Pricing Watch Agent] Error during agent execution:', error.message);
   }
