@@ -84,7 +84,8 @@ const Payment = () => {
     } catch (error) {
       console.error('Payment error:', error);
       setLoading(false);
-      alert('Payment processing failed. Check console.');
+      const msg = error.response?.data?.message || error.response?.data?.error || error.message || 'Payment processing failed.';
+      alert(`Payment processing failed: ${msg}`);
     }
   };
 
