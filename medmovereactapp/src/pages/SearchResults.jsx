@@ -22,6 +22,9 @@ const SearchResults = () => {
   // State for filtering cheaper options when Watch Price is clicked
   const [watchedFilter, setWatchedFilter] = useState(null);
 
+  // Agent Popup Modal State
+  const [watchModalInfo, setWatchModalInfo] = useState(null);
+
   // Modal State
   const [showModal, setShowModal] = useState(false);
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
@@ -85,7 +88,7 @@ const SearchResults = () => {
     }
 
     try {
-      await axios.post(
+      const addRes = await axios.post(
         `${API_BASE}/api/price-watch/add`,
         {
           route_from: pickup,
@@ -97,9 +100,34 @@ const SearchResults = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert('🔔 Price watch saved! The Dynamic Pricing Watch Agent is now actively monitoring this route for price drops.');
+      // Trigger agent immediately to check for price drops right now
+      await axios.post(`${API_BASE}/api/price-watch/trigger-agent`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Fetch my watches to see if an alert message was created
+      const myWatchesRes = await axios.get(`${API_BASE}/api/price-watch/my-watches`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      let alertMessage = null;
+      if (myWatchesRes.data.success && myWatchesRes.data.watches?.length > 0) {
+        const currentWatch = myWatchesRes.data.watches.find(w => w.id === addRes.data.watch?.id || (w.route_from === pickup && w.route_to === drop));
+        if (currentWatch && currentWatch.alert_message) {
+          alertMessage = currentWatch.alert_message;
+        }
+      }
+
+      setWatchModalInfo({
+        route_from: pickup,
+        route_to: drop,
+        vehicle_type: ambulance.type,
+        watched_price: ambulance.estimated_total,
+        alert_message: alertMessage
+      });
     } catch (err) {
       console.error('Watch save error:', err);
+      alert('Failed to save price watch. Please try again.');
     }
 
     setWatchedFilter({
@@ -284,6 +312,63 @@ const SearchResults = () => {
           ))}
         </div>
       </div>
+
+      {/* Dynamic Pricing Watch Agent Popup Modal */}
+      {watchModalInfo && (
+        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.65)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px' }}>
+          <div className="modal-content" style={{ backgroundColor: '#ffffff', borderRadius: '20px', maxWidth: '480px', width: '100%', padding: '28px', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', animation: 'fadeIn 0.3s ease-out' }}>
+            
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+              <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#fff0f0', color: '#CC0000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '30px', margin: '0 auto 12px auto' }}>
+                🤖
+              </div>
+              <h3 style={{ fontSize: '1.4rem', color: '#1a1a2e', margin: '0 0 6px 0', fontWeight: '800' }}>
+                Pricing Watch Agent Activated!
+              </h3>
+              <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>
+                Monitoring <strong>{watchModalInfo.route_from}</strong> ──→ <strong>{watchModalInfo.route_to}</strong>
+              </p>
+            </div>
+
+            {watchModalInfo.alert_message ? (
+              <div style={{ backgroundColor: '#fff0f0', border: '1px solid #ffcdd2', borderRadius: '14px', padding: '16px', marginBottom: '20px', color: '#b71c1c' }}>
+                <div style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  🎉 Cheaper Rate Found Immediately!
+                </div>
+                <p style={{ margin: 0, fontSize: '0.9rem', lineHeight: '1.4' }}>
+                  {watchModalInfo.alert_message}
+                </p>
+              </div>
+            ) : (
+              <div style={{ backgroundColor: '#f8f9fa', border: '1px dashed #ccc', borderRadius: '14px', padding: '16px', marginBottom: '20px', color: '#555', textAlign: 'center' }}>
+                <p style={{ margin: '0 0 6px 0', fontWeight: '700', color: '#1a1a2e' }}>
+                  📡 Agent is actively checking hourly
+                </p>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#666' }}>
+                  Target Watched Fare: <strong>₹{watchModalInfo.watched_price}</strong>. If any provider lowers their price below this amount, you will get an instant alert!
+                </p>
+              </div>
+            )}
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button 
+                onClick={() => { setWatchModalInfo(null); navigate('/price-watch'); }}
+                style={{ flex: 1, backgroundColor: '#CC0000', color: '#ffffff', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '800', fontSize: '0.95rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(204,0,0,0.2)' }}
+              >
+                👁 View All Watches
+              </button>
+              <button 
+                onClick={() => setWatchModalInfo(null)}
+                style={{ flex: 1, backgroundColor: '#f0f4f8', color: '#555', border: '1px solid #ccc', borderRadius: '12px', padding: '14px', fontWeight: '700', fontSize: '0.95rem', cursor: 'pointer' }}
+              >
+                Close ✓
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
