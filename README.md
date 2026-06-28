@@ -340,6 +340,24 @@ await sendDiscordAlert({ type, ip, timestamp, details });
 
 ---
 
+## 🛡️ Security Guardian Agent — Live Evidence
+
+The Security Guardian Agent was tested on the live deployed site.
+Results confirmed working in production:
+
+**Test performed:** 5 consecutive failed login attempts on https://med-move-ai-agent-integration-8liisifjv.vercel.app
+
+**Result on website:**
+"Too many attempts. Please try again later." — IP blocked instantly.
+
+![Website IP Blocked Evidence](docs/images/website_blocked_evidence.png)
+
+**Result on Discord (#secrity-alerts channel):**
+
+![Discord Security Alert Evidence](docs/images/discord_alert_evidence.png)
+
+---
+
 ## 👩‍💻 Built By
 
 **Pavitra S** — Tamil Nadu, India
