@@ -30,7 +30,7 @@ exports.sendOTP = async (req, res) => {
         res.status(200).json({ 
             success: true, 
             message: result.message,
-            dev_otp: process.env.NODE_ENV !== 'production' ? otp : undefined 
+            dev_otp: otp 
         });
     } catch (err) {
         console.error('Send OTP Error:', err);

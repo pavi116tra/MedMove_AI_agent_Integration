@@ -39,6 +39,7 @@ const UserRegister = () => {
             setOtpSent(true);
             if (res.data.dev_otp) {
                 setDevOtp(res.data.dev_otp);
+                setFormData(prev => ({ ...prev, otp: res.data.dev_otp }));
             }
             setError('');
         } catch (err) {
