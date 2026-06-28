@@ -5,7 +5,6 @@ import API_BASE from '../config/api';
 import { AuthContext } from '../context/AuthContext';
 import Navbar from '../Components/Home/Navbar/Navbar';
 import Footer from '../Components/Home/Footer/Footer';
-import BookingConfirmModal from '../Components/BookingConfirmModal';
 import './PriceWatchDashboard.css';
 
 const PriceWatchDashboard = () => {
@@ -14,11 +13,6 @@ const PriceWatchDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState('all');
   const navigate = useNavigate();
-
-  // Booking Modal State
-  const [showModal, setShowModal] = useState(false);
-  const [selectedAmbulance, setSelectedAmbulance] = useState(null);
-  const [selectedWatch, setSelectedWatch] = useState(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -88,46 +82,6 @@ const PriceWatchDashboard = () => {
     }
   };
 
-  const handleBookNow = (watch) => {
-    let companyName = 'MedMove Partner';
-    if (watch.alert_message) {
-      const match = watch.alert_message.match(/offered by (.*?)\)/);
-      if (match && match[1]) companyName = match[1];
-    }
-
-    const ambObj = {
-      id: 1,
-      company_name: companyName,
-      estimated_total: Number(watch.watched_price),
-      base_charge: Math.round(Number(watch.watched_price) * 0.4),
-      distance_charge: Math.round(Number(watch.watched_price) * 0.6),
-      vehicle_number: 'TN37AB9999',
-      driver_name: 'Assigned Partner Driver',
-      driver_phone: '*** hidden until booked ***',
-      type: watch.vehicle_type,
-      price_per_km: 15
-    };
-
-    setSelectedAmbulance(ambObj);
-    setSelectedWatch(watch);
-    setShowModal(true);
-  };
-
-  const confirmBooking = (patientDetails) => {
-    setShowModal(false);
-    navigate('/payment', {
-      state: { 
-        ambulance: selectedAmbulance, 
-        pickup: selectedWatch.route_from, 
-        drop: selectedWatch.route_to, 
-        date: selectedWatch.travel_date, 
-        time: '10:00 AM', 
-        distance_km: 100,
-        patientDetails
-      }
-    });
-  };
-
   const filteredWatches = watches.filter(w => {
     if (filterType === 'all') return true;
     return w.vehicle_type?.toLowerCase() === filterType.toLowerCase();
@@ -137,18 +91,6 @@ const PriceWatchDashboard = () => {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
       <div className="search-results-page" style={{ flex: 1 }}>
-        
-        {showModal && selectedWatch && (
-          <BookingConfirmModal 
-            ambulance={selectedAmbulance}
-            pickup={selectedWatch.route_from}
-            drop={selectedWatch.route_to}
-            date={selectedWatch.travel_date}
-            time="10:00 AM"
-            onConfirm={confirmBooking}
-            onCancel={() => setShowModal(false)}
-          />
-        )}
 
         {/* SUMMARY BAR HEADER */}
         <div className="summary-bar">
