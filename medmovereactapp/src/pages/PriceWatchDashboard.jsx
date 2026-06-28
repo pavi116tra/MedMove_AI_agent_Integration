@@ -45,6 +45,29 @@ const PriceWatchDashboard = () => {
     fetchWatches();
   }, [isAuthenticated, navigate]);
 
+  const [runningAgent, setRunningAgent] = useState(false);
+
+  const handleRunAgent = async () => {
+    setRunningAgent(true);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`${API_BASE}/api/price-watch/trigger-agent`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const response = await axios.get(`${API_BASE}/api/price-watch/my-watches`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setWatches(response.data.watches);
+      }
+      alert('🤖 Dynamic Pricing Watch Agent inspection completed! All route prices verified.');
+    } catch (err) {
+      console.error('Failed to run pricing agent:', err);
+    } finally {
+      setRunningAgent(false);
+    }
+  };
+
   const handleMarkSeen = async (id) => {
     try {
       const token = localStorage.getItem('token');
@@ -130,9 +153,29 @@ const PriceWatchDashboard = () => {
                 🔔 Dynamic Price Watch Dashboard
               </span>
             </div>
-            <span className="meta">
-              Tracked routes & real-time provider price drop alerts
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <span className="meta" style={{ display: 'none' }}>
+                Tracked routes & real-time provider price drop alerts
+              </span>
+              <button 
+                onClick={handleRunAgent}
+                disabled={runningAgent}
+                style={{
+                  backgroundColor: '#CC0000',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '20px',
+                  padding: '8px 16px',
+                  fontWeight: '700',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(204,0,0,0.3)',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {runningAgent ? '🤖 Agent Inspecting...' : '🤖 Run Agent Now'}
+              </button>
+            </div>
           </div>
         </div>
 

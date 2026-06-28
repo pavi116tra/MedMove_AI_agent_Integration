@@ -22,9 +22,14 @@ exports.addWatch = async (req, res) => {
       alert_seen: false
     });
 
+    // Run agent immediately after adding watch so alert triggers instantly if cheaper rate exists
+    setTimeout(() => {
+      exports.runPricingAgent().catch(err => console.error('Immediate agent run error:', err));
+    }, 500);
+
     res.status(201).json({
       success: true,
-      message: 'Price watch added successfully!',
+      message: 'Price watch added successfully! Agent is monitoring for price drops.',
       watch
     });
   } catch (error) {
@@ -82,9 +87,21 @@ exports.markAlertSeen = async (req, res) => {
   }
 };
 
-// @desc    Background Agent running every hour checking for cheaper provider rates
+// @desc    Manual Trigger Endpoint for Pricing Agent
+// @route   POST /api/price-watch/trigger-agent
+exports.triggerAgent = async (req, res) => {
+  try {
+    await exports.runPricingAgent();
+    res.json({ success: true, message: 'Pricing Watch Agent executed successfully.' });
+  } catch (error) {
+    console.error('❌ Trigger Agent Error:', error);
+    res.status(500).json({ success: false, message: 'Agent execution failed.' });
+  }
+};
+
+// @desc    Background Agent running periodically checking for cheaper provider rates
 exports.runPricingAgent = async () => {
-  console.log('🤖 [Pricing Watch Agent] Running hourly price comparison agent...');
+  console.log('🤖 [Pricing Watch Agent] Running price comparison agent inspection...');
   try {
     const watches = await PriceWatch.findAll();
     if (!watches || watches.length === 0) {
@@ -107,15 +124,17 @@ exports.runPricingAgent = async () => {
         const currentCheapestPrice = Number(cheapest.estimated_total);
         const watchedPrice = Number(watch.watched_price);
 
-        if (currentCheapestPrice < watchedPrice) {
+        // Trigger alert if current cheapest is lower than watched price
+        // OR if multiple providers exist and offer competitive pricing
+        if (currentCheapestPrice < watchedPrice || (results.length > 1 && currentCheapestPrice <= watchedPrice)) {
           const alertMsg = `Price dropped! ${watch.vehicle_type.toUpperCase()} on your ${watch.route_from} to ${watch.route_to} route is now cheaper at ₹${currentCheapestPrice} (offered by ${cheapest.company_name}).`;
           
-          if (watch.alert_message !== alertMsg) {
+          if (watch.alert_message !== alertMsg || watch.alert_seen) {
             watch.alert_message = alertMsg;
             watch.alert_seen = false;
             await watch.save();
             alertsTriggered++;
-            console.log(`🤖 [Pricing Watch Agent] Alert triggered for user ${watch.user_id}: ₹${currentCheapestPrice} < ₹${watchedPrice}`);
+            console.log(`🤖 [Pricing Watch Agent] Alert triggered for watch #${watch.id} (User #${watch.user_id}): ₹${currentCheapestPrice} <= ₹${watchedPrice}`);
           }
         }
       }

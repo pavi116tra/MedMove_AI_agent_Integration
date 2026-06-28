@@ -79,8 +79,13 @@ const SearchResults = () => {
   const handleWatchPrice = async (ambulance) => {
     const token = localStorage.getItem('token');
     
-    if (token) {
-      axios.post(
+    if (!token) {
+      alert('Please log in to track ambulance price drops.');
+      return;
+    }
+
+    try {
+      await axios.post(
         `${API_BASE}/api/price-watch/add`,
         {
           route_from: pickup,
@@ -90,7 +95,11 @@ const SearchResults = () => {
           watched_price: ambulance.estimated_total
         },
         { headers: { Authorization: `Bearer ${token}` } }
-      ).catch(err => console.error('Silent watch save error:', err));
+      );
+
+      alert('🔔 Price watch saved! The Dynamic Pricing Watch Agent is now actively monitoring this route for price drops.');
+    } catch (err) {
+      console.error('Watch save error:', err);
     }
 
     setWatchedFilter({

@@ -7,5 +7,6 @@ const { verifyToken } = require('../middleware/auth');
 router.post('/add', verifyToken, pricingWatchController.addWatch);
 router.get('/my-watches', verifyToken, pricingWatchController.getMyWatches);
 router.patch('/seen/:id', verifyToken, pricingWatchController.markAlertSeen);
+router.post('/trigger-agent', verifyToken, pricingWatchController.triggerAgent);
 
 module.exports = router;
