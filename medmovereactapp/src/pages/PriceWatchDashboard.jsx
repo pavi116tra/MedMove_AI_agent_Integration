@@ -219,8 +219,6 @@ const PriceWatchDashboard = () => {
         ) : (
           <div className="cards-grid">
             {filteredWatches.map((watch) => {
-              const hasAlert = Boolean(watch.alert_message);
-
               return (
                 <div key={watch.id} className="ambulance-card">
                   
