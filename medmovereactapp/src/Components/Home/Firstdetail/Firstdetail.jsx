@@ -279,36 +279,45 @@ const Firstdetail = () => {
             </button>
           </div>
 
-          {aiResult && (
-            <div className="ai-result-box-wrapper">
-              {aiResult.is_emergency ? (
-                <div className="ai-emergency-neutral-box">
-                  MedMove is for planned medical transport only. For medical emergencies, please call 108.
-                  <br/><br/>
-                  If you need to schedule a hospital transport for a non-emergency situation, we are here to help.
-                </div>
-              ) : (
-                <>
-                  <div className="ai-green-result-box">
-                    <div className="ai-green-left">
-                      <div className="ai-recommend-title">
-                        ✅ Best match for this journey: {aiResult.ambulance_type === 'basic' ? 'Basic (BLS)' : aiResult.ambulance_type === 'oxygen' ? 'Oxygen (ALS)' : 'ICU Mobile ICU'}
+          {aiResult && (() => {
+            const isTa = /[\u0B80-\u0BFF]/.test(aiInput || '') || lang === 'ta';
+            const typeName = aiResult.ambulance_type === 'basic' 
+              ? (isTa ? 'Basic (BLS) ஆம்புலன்ஸ்' : 'Basic (BLS)') 
+              : aiResult.ambulance_type === 'oxygen' 
+              ? (isTa ? 'Oxygen (ALS) ஆம்புலன்ஸ்' : 'Oxygen (ALS)') 
+              : (isTa ? 'ICU ஆம்புலன்ஸ்' : 'ICU Mobile ICU');
+
+            return (
+              <div className="ai-result-box-wrapper">
+                {aiResult.is_emergency ? (
+                  <div className="ai-emergency-neutral-box">
+                    {isTa ? "MedMove திட்டமிட்ட மருத்துவமனை பயணத்திற்கு மட்டுமே. அவசர நிலைகளுக்கு 108 அழைக்கவும்." : "MedMove is for planned medical transport only. For medical emergencies, please call 108."}
+                    <br/><br/>
+                    {isTa ? "நீங்கள் திட்டமிட்ட மருத்துவமனை பயணத்திற்கு ஆம்புலன்ஸ் பதிவு செய்ய விரும்பினால், நாங்கள் உதவ தயார்." : "If you need to schedule a hospital transport for a non-emergency situation, we are here to help."}
+                  </div>
+                ) : (
+                  <>
+                    <div className="ai-green-result-box">
+                      <div className="ai-green-left">
+                        <div className="ai-recommend-title">
+                          ✅ {isTa ? "இந்த பயணத்திற்கான சிறந்த தேர்வு:" : "Best match for this journey:"} {typeName}
+                        </div>
+                        <div className="ai-recommend-reason">
+                          {aiResult.reason}
+                        </div>
                       </div>
-                      <div className="ai-recommend-reason">
-                        {aiResult.reason}
+                      <div className="ai-auto-badge">
+                        {isTa ? "தேர்வு செய்யப்பட்டது ✓" : "Type selected for you ✓"}
                       </div>
                     </div>
-                    <div className="ai-auto-badge">
-                      Type selected for you ✓
+                    <div className="ai-blue-result-box">
+                      💡 {isTa ? "பயண தயாரிப்பு குறிப்புகள்:" : "Journey preparation:"} {aiResult.preparation_tips || aiResult.journey_tip || aiResult.safety_note || (isTa ? "மருத்துவமனை அப்பாயிண்ட்மெண்ட் நேரத்தை உறுதிப்படுத்தி மருத்துவ ஆவணங்களை தயார் நிலையில் வைக்கவும்." : "Confirm hospital appointment time and have medical records ready.")}
                     </div>
-                  </div>
-                  <div className="ai-blue-result-box">
-                    💡 Journey preparation: {aiResult.preparation_tips || aiResult.journey_tip || aiResult.safety_note || "Confirm hospital appointment time and have medical records ready."}
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+                  </>
+                )}
+              </div>
+            );
+          })()}
         </div>
       </div>
 
