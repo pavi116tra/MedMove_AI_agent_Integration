@@ -32,60 +32,73 @@ const Payment = () => {
     setScanned(true);
     setLoading(true);
 
+    const token = localStorage.getItem('token');
+    const bookingData = {
+      ambulance_id: ambulance?.id || 1,
+      provider_id: ambulance?.provider_id || 1,
+      pickup_location: pickup || "Chennai",
+      drop_location: drop || "Coimbatore",
+      booking_date: date || new Date().toISOString().split('T')[0],
+      booking_time: time || "10:00 AM",
+      distance_km: distance_km || 100,
+      
+      // Alias fields for backwards compatibility
+      from_city: pickup || "Chennai",
+      to_city: drop || "Coimbatore",
+      travel_date: date || new Date().toISOString().split('T')[0],
+      
+      // Patient details
+      patient_name: patientDetails?.patient_name || "Guest",
+      patient_age: patientDetails?.patient_age || 30,
+      patient_condition: patientDetails?.patient_condition || "",
+      need_oxygen: patientDetails?.need_oxygen || false,
+      wheelchair: patientDetails?.wheelchair || false,
+      special_notes: patientDetails?.special_instructions || "",
+
+      // Fare Breakdown
+      base_charge: ambulance?.base_charge || 800,
+      distance_charge: (distance_km || 100) * (ambulance?.price_per_km || 15),
+      total_price: amount || 2300
+    };
+
+    console.log('Payment API call starting...');
+    console.log('Booking data being sent:', bookingData);
+
     try {
-      const token = localStorage.getItem('token');
-      const bookingData = {
-        ambulance_id: ambulance?.id,
-        provider_id: ambulance?.provider_id,
-        pickup_location: pickup,
-        drop_location: drop,
-        booking_date: date,
-        booking_time: time,
-        distance_km,
-        
-        // Patient details
-        patient_name: patientDetails?.patient_name || "Guest",
-        patient_age: patientDetails?.patient_age || 0,
-        patient_condition: patientDetails?.patient_condition || "",
-        need_oxygen: patientDetails?.need_oxygen || false,
-        wheelchair: patientDetails?.wheelchair || false,
-        special_notes: patientDetails?.special_instructions || "",
-
-        // Fare Breakdown
-        base_charge: ambulance?.base_charge,
-        distance_charge: distance_km * ambulance?.price_per_km,
-        total_price: amount
-      };
-
-      const bookingRes = await axios.post(
+      const response = await axios.post(
         `${API_BASE}/api/bookings/create`,
         bookingData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      console.log('Booking success:', response.data);
 
-      if (bookingRes.data.success) {
-        await axios.post(
-          `${API_BASE}/api/bookings/send-receipt`,
-          { booking_id: bookingRes.data.booking.id },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+      if (response.data.success) {
+        try {
+          await axios.post(
+            `${API_BASE}/api/bookings/send-receipt`,
+            { booking_id: response.data.booking.id },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+        } catch (receiptErr) {
+          console.error('Receipt sending notice:', receiptErr);
+        }
 
         setPaid(true);
         setLoading(false);
         setTimeout(() => {
           navigate('/booking-success', {
             state: {
-              booking: bookingRes.data.booking,
+              booking: response.data.booking,
               ambulance, pickup, drop, date, time, amount
             }
           });
         }, 2200);
       }
     } catch (error) {
-      console.error('Payment error:', error);
+      console.error('Booking error details:', error.response?.data);
+      console.error('Status:', error.response?.status);
       setLoading(false);
-      const msg = error.response?.data?.message || error.response?.data?.error || error.message || 'Payment processing failed.';
-      alert(`Payment processing failed: ${msg}`);
+      alert(`Error: ${error.response?.data?.message || error.message}`);
     }
   };
 
