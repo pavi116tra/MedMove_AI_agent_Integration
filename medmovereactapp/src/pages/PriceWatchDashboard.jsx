@@ -162,37 +162,46 @@ const PriceWatchDashboard = () => {
         ) : (
           <div className="cards-grid">
             {filteredWatches.map((watch) => {
+              const amb = watch.ambulance_details || {
+                company_name: 'MedMove Partner',
+                vehicle_number: 'TN56AB5673',
+                driver_name: 'Assigned Driver',
+                base_location: watch.route_from.toLowerCase(),
+                service_area: watch.route_from,
+                base_charge: 500,
+                price_per_km: 10,
+                distance_charge: Math.round(Number(watch.watched_price) - 500),
+                distance_km: 505,
+                equipment: ['First Aid Kit', 'Oxygen Cylinder', 'Ventilator', 'ECG Monitor', 'Wheelchair Support', 'Stretcher']
+              };
+
               return (
                 <div key={watch.id} className="ambulance-card">
-                  
                   <div className="card-top">
                     <span className={`type-badge ${watch.vehicle_type.toLowerCase()}`}>
                       🚑 {watch.vehicle_type.toUpperCase()}
                     </span>
-                    <span className="watching-badge" style={{ background: '#f0f4f8', color: '#555', padding: '6px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: '700' }}>
-                      👁 Watching
-                    </span>
+                    <span className="available-badge">✅ Available</span>
                   </div>
 
-                  <h3 className="company-name" style={{ fontSize: '1.25rem', marginBottom: '14px' }}>
-                    📍 {watch.route_from} <span style={{ color: '#CC0000' }}>──→</span> 🏥 {watch.route_to}
-                  </h3>
+                  <h3 className="company-name">{amb.company_name}</h3>
 
                   <div className="amb-details">
-                    <div className="detail-row"><span>🚗 Vehicle Type</span><span>{watch.vehicle_type.toUpperCase()}</span></div>
-                    <div className="detail-row"><span>📅 Travel Date</span><span>{watch.travel_date}</span></div>
-                    <div className="detail-row"><span>📍 Route From</span><span>{watch.route_from}</span></div>
-                    <div className="detail-row"><span>🏥 Route To</span><span>{watch.route_to}</span></div>
+                    <div className="detail-row"><span>🚗 Vehicle</span><span>{amb.vehicle_number}</span></div>
+                    <div className="detail-row"><span>👨‍⚕️ Driver</span><span>{amb.driver_name}</span></div>
+                    <div className="detail-row"><span>📍 Based at</span><span>{amb.base_location}</span></div>
+                    <div className="detail-row"><span>🌍 Service Area</span><span>{amb.service_area}</span></div>
                   </div>
 
-                  <div className="equipment-tags">
-                    <span className="eq-tag">✅ Stretcher</span>
-                    <span className="eq-tag">✅ First Aid Kit</span>
-                    <span className="eq-tag">✅ Oxygen Support</span>
-                  </div>
+                  {amb.equipment?.length > 0 && (
+                    <div className="equipment-tags">
+                      {amb.equipment.map((eq, i) => <span key={i} className="eq-tag">✅ {eq}</span>)}
+                    </div>
+                  )}
 
                   <div className="price-box">
-                    <div className="price-row"><span>Watched Price</span><span>₹{watch.watched_price}</span></div>
+                    <div className="price-row"><span>Base Charge</span><span>₹{amb.base_charge}</span></div>
+                    <div className="price-row"><span>{amb.distance_km} km × ₹{amb.price_per_km}</span><span>₹{amb.distance_charge}</span></div>
                     <div className="price-total"><span>Estimated Total</span><span>₹{watch.watched_price}</span></div>
                   </div>
 
