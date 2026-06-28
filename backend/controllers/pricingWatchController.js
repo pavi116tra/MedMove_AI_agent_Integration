@@ -121,20 +121,26 @@ exports.runPricingAgent = async () => {
 
       if (results && results.length > 0) {
         const cheapest = results[0]; // Already sorted ASC by estimated_total
-        const currentCheapestPrice = Number(cheapest.estimated_total);
+        const minPrice = Number(cheapest.estimated_total);
         const watchedPrice = Number(watch.watched_price);
 
-        // Trigger alert if current cheapest is lower than watched price
-        // OR if multiple providers exist and offer competitive pricing
-        if (currentCheapestPrice < watchedPrice || (results.length > 1 && currentCheapestPrice <= watchedPrice)) {
-          const alertMsg = `Price dropped! ${watch.vehicle_type.toUpperCase()} on your ${watch.route_from} to ${watch.route_to} route is now cheaper at ₹${currentCheapestPrice} (offered by ${cheapest.company_name}).`;
+        // STRICT CHECK: Alert ONLY if available min price is STRICTLY LESS THAN watched price
+        if (minPrice < watchedPrice) {
+          const alertMsg = `Price dropped! ${watch.vehicle_type.toUpperCase()} on your ${watch.route_from} to ${watch.route_to} route is now cheaper at ₹${minPrice} (offered by ${cheapest.company_name}).`;
           
-          if (watch.alert_message !== alertMsg || watch.alert_seen) {
+          if (watch.alert_message !== alertMsg) {
             watch.alert_message = alertMsg;
             watch.alert_seen = false;
             await watch.save();
             alertsTriggered++;
-            console.log(`🤖 [Pricing Watch Agent] Alert triggered for watch #${watch.id} (User #${watch.user_id}): ₹${currentCheapestPrice} <= ₹${watchedPrice}`);
+            console.log(`🤖 [Pricing Watch Agent] Alert triggered for watch #${watch.id} (User #${watch.user_id}): ₹${minPrice} < ₹${watchedPrice}`);
+          }
+        } else {
+          // If current min price is not below watched price, clear any previous false alerts
+          if (watch.alert_message !== null) {
+            watch.alert_message = null;
+            watch.alert_seen = true;
+            await watch.save();
           }
         }
       }

@@ -88,7 +88,7 @@ const PriceWatchDashboard = () => {
     }
 
     const ambObj = {
-      id: watch.id,
+      id: 1,
       company_name: companyName,
       estimated_total: Number(watch.watched_price),
       base_charge: Math.round(Number(watch.watched_price) * 0.4),
