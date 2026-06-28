@@ -99,6 +99,22 @@ When a user speaks or types in Tamil, MedMove automatically understands the inpu
 - If cheaper provider found → sets `alert_message` and `alert_seen = false`
 - Frontend `PriceDropAlert.jsx` banner appears automatically
 
+#### 🔔 Dynamic Pricing Watch Agent — Live Evidence
+
+The Pricing Watch Agent runs autonomously on the server every hour to monitor ambulance rates across Tamil Nadu routes. When a provider lowers their fare, the agent instantly alerts patients so frequent travelers (like dialysis patients) save money.
+
+**1. Live Price Drop Alert Banner (Search Results Page):**
+- When a user visits any page, a prominent green alert banner appears at the top:
+  - *"🔔 Price Dropped! BASIC on your Chennai to Coimbatore route is now cheaper! View Watches ➔"*
+
+![Price Drop Alert Banner Evidence](docs/images/price_drop_banner_evidence.png)
+
+**2. Dynamic Price Watch Dashboard:**
+- On the patient's Price Watch Dashboard, the tracked route card (`Chennai ➔ Coimbatore`) displays a real-time notification badge:
+  - *"⚠️ Cheaper Option Found! Price dropped! BASIC on your Chennai to Coimbatore route is now cheaper at ₹6,203 (offered by Jina Ambulance service)."*
+
+![Price Watch Dashboard Evidence](docs/images/price_watch_dashboard_evidence.png)
+
 ### Agent 3 — Security Guardian Agent
 
 Silent background agent protecting every API call:
