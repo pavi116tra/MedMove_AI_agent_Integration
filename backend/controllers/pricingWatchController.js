@@ -117,8 +117,7 @@ exports.runPricingAgent = async () => {
 
     for (const watch of activeWatches) {
       try {
-        // Search for ambulances on this route
-        const searchRes = await executeAmbulanceSearch({
+        const resultsRes = await executeAmbulanceSearch({
           from_city: watch.route_from,
           to_city: watch.route_to,
           travel_date: watch.travel_date,
@@ -128,42 +127,47 @@ exports.runPricingAgent = async () => {
           type: watch.vehicle_type
         });
 
-        const results = Array.isArray(searchRes) ? searchRes : (searchRes?.results || []);
+        const results = Array.isArray(resultsRes) ? resultsRes : (resultsRes?.results || []);
 
-        if (!results || results.length === 0) continue;
+        if (!results || results.length === 0) {
+          console.log(`No results for watch ${watch.id}`);
+          continue;
+        }
 
-        // Find the MINIMUM price from all results
-        let minPrice = Infinity;
+        // Step 1: Find the minimum price from ALL search results
+        let minimumPrice = Infinity;
         let cheapestAmbulance = null;
 
         for (const amb of results) {
-          const distanceKm = 100; // default
-          const base = parseFloat(amb.base_charge || 0);
-          const rate = parseFloat(amb.per_km_rate || amb.price_per_km || 15);
-          const total = amb.estimated_total != null ? parseFloat(amb.estimated_total) : (base + (rate * distanceKm));
-          if (total < minPrice) {
-            minPrice = total;
+          const ambTotal = parseFloat(amb.estimated_total || 
+                           (amb.base_charge + ((amb.per_km_rate || amb.price_per_km || 15) * 100)));
+          
+          if (ambTotal < minimumPrice) {
+            minimumPrice = ambTotal;
             cheapestAmbulance = amb;
           }
         }
 
         const watchedPrice = parseFloat(watch.watched_price);
 
-        // ONLY alert if strictly LESS THAN watched price
-        // Do NOT alert if equal or higher
-        if (cheapestAmbulance && minPrice < watchedPrice) {
-          const vehicleTypeStr = (cheapestAmbulance.vehicle_type || cheapestAmbulance.type || watch.vehicle_type).toUpperCase();
-          watch.alert_message = `Price drop! ${vehicleTypeStr} ambulance now available at ₹${Math.round(minPrice)} (you watched ₹${Math.round(watchedPrice)})`;
+        console.log(`Watch ${watch.id}: watched=₹${watchedPrice}, currentMin=₹${minimumPrice}`);
+
+        // Step 2: Only alert if minimum price is STRICTLY LESS than watched price
+        if (cheapestAmbulance && minimumPrice < watchedPrice) {
+          // There IS a cheaper option available right now
+          const ambType = (cheapestAmbulance.vehicle_type || cheapestAmbulance.type || watch.vehicle_type).toUpperCase();
+          watch.alert_message = `Price drop! ${ambType} ambulance now available at ₹${Math.round(minimumPrice)} (you watched ₹${Math.round(watchedPrice)})`;
           watch.alert_seen = false;
           await watch.save();
-          console.log(`Alert set for watch ${watch.id}: ₹${minPrice} < ₹${watchedPrice}`);
+          console.log(`✅ Alert SET for watch ${watch.id}`);
         } else {
-          // Clear any old alert if price is no longer cheaper
-          if (watch.alert_message && minPrice >= watchedPrice) {
+          // Minimum price is >= watched price — no cheaper option
+          // Clear any existing alert
+          if (watch.alert_message) {
             watch.alert_message = null;
             watch.alert_seen = true;
             await watch.save();
-            console.log(`Alert cleared for watch ${watch.id}: ₹${minPrice} >= ₹${watchedPrice}`);
+            console.log(`🔄 Alert CLEARED for watch ${watch.id} - no cheaper option`);
           }
         }
       } catch (err) {

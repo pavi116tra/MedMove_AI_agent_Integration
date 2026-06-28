@@ -76,14 +76,15 @@ const PriceWatchDashboard = () => {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // Remove from local state immediately / mark seen
-      setWatches(prev => prev.map(w => 
-        w.id === watchId 
+      // Update local state - mark as seen and clear message
+      setWatches(prev => prev.map(w =>
+        w.id === watchId
           ? { ...w, alert_seen: true, alert_message: null }
           : w
       ));
     } catch (error) {
       console.error('Dismiss error:', error.response?.data || error.message);
+      alert('Could not dismiss. Please try again.');
     }
   };
 
@@ -253,42 +254,28 @@ const PriceWatchDashboard = () => {
                     <div className="price-total"><span>Estimated Total</span><span>₹{watch.watched_price}</span></div>
                   </div>
 
-                  {watch.alert_message && !watch.alert_seen ? (
-                    <div>
-                      <div style={{ background: '#fff0f0', border: '1px solid #ffcdd2', borderRadius: '10px', padding: '10px 12px', marginBottom: '12px', fontSize: '0.85rem', color: '#b71c1c' }}>
-                        ⚠️ <strong>Cheaper Option Found!</strong><br />
-                        {watch.alert_message}
-                      </div>
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <button className="book-btn" style={{ flex: 2 }} onClick={() => handleBookNow(watch)}>
+                  {watch.alert_message && watch.alert_seen === false ? (
+                    <div className="price-alert-box" style={{ background: '#fff0f0', border: '1px solid #ffcdd2', borderRadius: '10px', padding: '12px', marginBottom: '12px', color: '#b71c1c' }}>
+                      <p style={{ margin: '0 0 4px 0', fontWeight: 'bold' }}>⚠️ Cheaper Option Found!</p>
+                      <p style={{ margin: '0 0 10px 0', fontSize: '0.88rem' }}>{watch.alert_message}</p>
+                      <div className="alert-actions" style={{ display: 'flex', gap: '8px' }}>
+                        <button 
+                          className="book-now-btn book-btn"
+                          style={{ flex: 2 }}
+                          onClick={() => navigate(`/search-results?from=${watch.route_from}&to=${watch.route_to}&date=${watch.travel_date}&type=${watch.vehicle_type}`)}>
                           Book Now →
                         </button>
                         <button 
-                          style={{
-                            flex: 1,
-                            backgroundColor: '#ffffff',
-                            color: '#2e7d32',
-                            border: '1.5px solid #2e7d32',
-                            borderRadius: '12px',
-                            fontWeight: '700',
-                            fontSize: '13px',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '4px'
-                          }} 
-                          onClick={() => handleDismiss(watch.id)}
-                          title="Dismiss Alert"
-                        >
+                          className="dismiss-btn"
+                          style={{ flex: 1, backgroundColor: '#ffffff', color: '#2e7d32', border: '1.5px solid #2e7d32', borderRadius: '12px', fontWeight: '700', fontSize: '13px', cursor: 'pointer' }}
+                          onClick={() => handleDismiss(watch.id)}>
                           Dismiss Alert ✓
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <div style={{ background: '#f8f9fa', border: '1px dashed #ccc', borderRadius: '10px', padding: '12px', textAlign: 'center', fontSize: '0.82rem', color: '#666', fontStyle: 'italic' }}>
-                      🤖 Agent is actively checking hourly for cheaper providers...
+                    <div className="agent-checking" style={{ background: '#f8f9fa', border: '1px dashed #ccc', borderRadius: '10px', padding: '12px', textAlign: 'center', fontSize: '0.82rem', color: '#666', fontStyle: 'italic' }}>
+                      <p style={{ margin: 0 }}>🤖 Agent is actively checking hourly for cheaper providers...</p>
                     </div>
                   )}
 
