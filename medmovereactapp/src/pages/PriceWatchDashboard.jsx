@@ -74,9 +74,9 @@ const PriceWatchDashboard = () => {
       await axios.patch(`${API_BASE}/api/price-watch/seen/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setWatches(prev => prev.map(w => w.id === id ? { ...w, alert_seen: true } : w));
+      setWatches(prev => prev.filter(w => w.id !== id));
     } catch (err) {
-      console.error('Failed to mark alert seen:', err);
+      console.error('Dismiss error:', err.response?.data);
     }
   };
 

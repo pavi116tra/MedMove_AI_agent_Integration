@@ -47,7 +47,7 @@ const PriceDropAlert = () => {
       });
       setUnseenAlerts(prev => prev.filter(a => a.id !== id));
     } catch (err) {
-      console.error('Failed to dismiss alert:', err);
+      console.error('Dismiss error:', err.response?.data);
     }
   };
 

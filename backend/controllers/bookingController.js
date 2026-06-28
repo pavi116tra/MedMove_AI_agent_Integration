@@ -23,16 +23,22 @@ exports.createBooking = async (req, res) => {
   try {
     const userId = req.user?.id;
     const {
-      ambulance_id, provider_id,
-      pickup_location, drop_location,
-      booking_date, booking_time,
+      provider_id,
+      booking_time,
       patient_name, patient_age,
       patient_condition,
       need_oxygen, wheelchair,
       special_notes,
       base_charge, distance_charge,
-      total_price, distance_km
+      distance_km
     } = req.body;
+
+    const ambulance_id = req.body.ambulance_id || req.body.id;
+    const pickup_location = req.body.pickup_location || req.body.from_city;
+    const drop_location = req.body.drop_location || req.body.to_city;
+    const booking_date = req.body.booking_date || req.body.travel_date || new Date().toISOString().split('T')[0];
+    const total_price = req.body.total_price || req.body.total_amount || 0;
+    const status_val = req.body.status || 'confirmed';
 
     if (!ambulance_id) {
       await t.rollback();
@@ -44,7 +50,7 @@ exports.createBooking = async (req, res) => {
       where: {
         ambulance_id,
         booking_date,
-        booking_time,
+        booking_time: booking_time || '10:00',
         status: 'blocked'
       },
       transaction: t
@@ -76,7 +82,7 @@ exports.createBooking = async (req, res) => {
         driver_name: 'Assigned Partner Driver',
         driver_phone: '9876543210',
         base_charge: req.body.base_charge || 800,
-        price_per_km: 15,
+        price_per_km: req.body.per_km_rate || 15,
         provider_id: provider_id || 1
       };
     }
@@ -104,9 +110,9 @@ exports.createBooking = async (req, res) => {
 
       pickup_location: pickup_location || 'Pickup Location',
       drop_location: drop_location || 'Drop Location',
-      booking_date: booking_date || new Date().toISOString().split('T')[0],
+      booking_date: booking_date,
       booking_time: booking_time || '10:00',
-      distance_km: distance_km || 0,
+      distance_km: distance_km || 100,
 
       patient_name: patient_name || fullName,
       patient_age: patient_age || 30,
@@ -115,12 +121,12 @@ exports.createBooking = async (req, res) => {
       wheelchair: wheelchair || false,
       special_notes: special_notes || '',
 
-      base_charge: base_charge || ambulance.base_charge || 0,
-      distance_charge: distance_charge || 0,
-      total_price: total_price || 0,
+      base_charge: base_charge || ambulance.base_charge || 800,
+      distance_charge: distance_charge || 1500,
+      total_price: total_price || 2300,
       payment_method: 'qr_scan',
       payment_status: 'paid',
-      status: 'confirmed'
+      status: status_val
     }, { transaction: t });
 
     // STEP 4: Save to provider_earnings table
@@ -141,13 +147,13 @@ exports.createBooking = async (req, res) => {
 
       pickup_location: pickup_location || 'Pickup Location',
       drop_location: drop_location || 'Drop Location',
-      booking_date: booking_date || new Date().toISOString().split('T')[0],
+      booking_date: booking_date,
       booking_time: booking_time || '10:00',
       day_of_week: dayName,
-      distance_km: distance_km || 0,
+      distance_km: distance_km || 100,
 
-      total_fare: total_price || 0,
-      trip_status: 'confirmed'
+      total_fare: total_price || 2300,
+      trip_status: status_val
     }, { transaction: t });
 
     // STEP 5: Block the time slot
@@ -155,7 +161,7 @@ exports.createBooking = async (req, res) => {
       await AmbulanceSlot.create({
         ambulance_id: ambulance.id || ambulance_id || 1,
         booking_id: booking.id,
-        booking_date: booking_date || new Date().toISOString().split('T')[0],
+        booking_date: booking_date,
         booking_time: booking_time || '10:00',
         status: 'blocked'
       }, { transaction: t });
@@ -182,35 +188,33 @@ exports.createBooking = async (req, res) => {
     await t.commit();
 
     console.log('✅ Booking created:', booking.id);
-    console.log('✅ Slot blocked:', booking_date, booking_time);
-    console.log('✅ Provider earnings saved');
 
     return res.status(201).json({
       success: true,
       message: 'Booking confirmed successfully',
       booking: {
         id: booking.id,
-        vehicle_number: ambulance.vehicle_number,
-        driver_name: ambulance.driver_name,
-        driver_phone: ambulance.driver_phone,
+        vehicle_number: ambulance.vehicle_number || 'TN37AB9999',
+        driver_name: ambulance.driver_name || 'Assigned Driver',
+        driver_phone: ambulance.driver_phone || '9876543210',
         company_name: companyName,
         pickup_location: pickup_location || 'Pickup Location',
         drop_location: drop_location || 'Drop Location',
-        booking_date: booking_date || new Date().toISOString().split('T')[0],
+        booking_date: booking_date,
         booking_time: booking_time || '10:00',
         patient_name: patient_name || fullName,
-        total_price: total_price || 0,
-        status: 'confirmed'
+        total_price: total_price || 2300,
+        status: status_val
       }
     });
 
   } catch (error) {
     if (t) await t.rollback();
-    console.error('❌ Booking Error:', error);
-    return res.status(500).json({
-      success: false,
-      message: error.message || 'Booking failed. Please try again.',
-      error: error.message
+    console.error('Booking creation error:', error);
+    return res.status(500).json({ 
+      success: false, 
+      message: error.message,
+      details: error.toString()
     });
   }
 };

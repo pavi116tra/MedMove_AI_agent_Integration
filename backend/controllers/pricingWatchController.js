@@ -103,6 +103,7 @@ exports.triggerAgent = async (req, res) => {
 exports.runPricingAgent = async () => {
   console.log('🤖 [Pricing Watch Agent] Running price comparison agent inspection...');
   try {
+    // 1. Get active watches
     const watches = await PriceWatch.findAll();
     if (!watches || watches.length === 0) {
       console.log('🤖 [Pricing Watch Agent] No active price watches found.');
@@ -112,6 +113,10 @@ exports.runPricingAgent = async () => {
     let alertsTriggered = 0;
 
     for (const watch of watches) {
+      // Skip if watch is already dismissed by user
+      if (watch.alert_seen && watch.alert_message) continue;
+
+      // 2. Run executeAmbulanceSearch with the route
       const { distance_km, results } = await executeAmbulanceSearch({
         pickup: watch.route_from,
         drop: watch.route_to,
@@ -120,23 +125,31 @@ exports.runPricingAgent = async () => {
       });
 
       if (results && results.length > 0) {
-        const cheapest = results[0]; // Already sorted ASC by estimated_total
-        const minPrice = Number(cheapest.estimated_total);
-        const watchedPrice = Number(watch.watched_price);
+        // 3. Find the MINIMUM price ambulance from results using reduce
+        const minPriceAmbulance = results.reduce((min, amb) => {
+          const ambPrice = Number(amb.estimated_total != null ? amb.estimated_total : ((amb.base_charge || 0) + ((amb.price_per_km || amb.per_km_rate || 15) * 100)));
+          const minPrice = Number(min.estimated_total != null ? min.estimated_total : ((min.base_charge || 0) + ((min.price_per_km || min.per_km_rate || 15) * 100)));
+          return ambPrice < minPrice ? amb : min;
+        }, results[0]);
 
-        // STRICT CHECK: Alert ONLY if available min price is STRICTLY LESS THAN watched price
-        if (minPrice < watchedPrice) {
-          const alertMsg = `Price dropped! ${watch.vehicle_type.toUpperCase()} on your ${watch.route_from} to ${watch.route_to} route is now cheaper at ₹${minPrice} (offered by ${cheapest.company_name}).`;
+        // 4. Calculate watched price total & minimum found total
+        const watchedTotal = Number(watch.watched_price);
+        const minTotal = Number(minPriceAmbulance.estimated_total != null ? minPriceAmbulance.estimated_total : ((minPriceAmbulance.base_charge || 0) + ((minPriceAmbulance.price_per_km || minPriceAmbulance.per_km_rate || 15) * 100)));
+
+        // 5. Compare: Trigger alert if minimum found is strictly less than watched price
+        if (minTotal < watchedTotal) {
+          const vehicleTypeStr = (minPriceAmbulance.type || minPriceAmbulance.vehicle_type || watch.vehicle_type).toUpperCase();
+          const alertMsg = `Price drop! ${vehicleTypeStr} ambulance now available at ₹${minTotal} (you watched ₹${watchedTotal})`;
           
           if (watch.alert_message !== alertMsg) {
             watch.alert_message = alertMsg;
             watch.alert_seen = false;
             await watch.save();
             alertsTriggered++;
-            console.log(`🤖 [Pricing Watch Agent] Alert triggered for watch #${watch.id} (User #${watch.user_id}): ₹${minPrice} < ₹${watchedPrice}`);
+            console.log(`🤖 [Pricing Watch Agent] Alert triggered for watch #${watch.id}: ₹${minTotal} < ₹${watchedTotal}`);
           }
         } else {
-          // If current min price is not below watched price, clear any previous false alerts
+          // Clear stale alert message if min price is not below watched price
           if (watch.alert_message !== null) {
             watch.alert_message = null;
             watch.alert_seen = true;
@@ -146,7 +159,7 @@ exports.runPricingAgent = async () => {
       }
     }
 
-    console.log(`🤖 [Pricing Watch Agent] Finished checking ${watches.length} watches. Alerts triggered/updated: ${alertsTriggered}`);
+    console.log(`🤖 [Pricing Watch Agent] Finished checking watches. Alerts triggered/updated: ${alertsTriggered}`);
   } catch (error) {
     console.error('❌ [Pricing Watch Agent] Error during agent execution:', error.message);
   }

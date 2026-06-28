@@ -34,35 +34,34 @@ const Payment = () => {
 
     const token = localStorage.getItem('token');
     const bookingData = {
-      ambulance_id: ambulance?.id || 1,
+      ambulance_id: ambulance?.id || ambulance?.ambulance_id || 1,
       provider_id: ambulance?.provider_id || 1,
+      from_city: pickup || "Chennai",
+      to_city: drop || "Coimbatore",
+      travel_date: date || new Date().toISOString().split('T')[0],
+      total_amount: amount || 2300,
+      base_charge: ambulance?.base_charge || 800,
+      per_km_rate: ambulance?.price_per_km || 15,
+      distance_km: distance_km || 100,
+      status: 'confirmed',
+      
+      // Standard schema fields
       pickup_location: pickup || "Chennai",
       drop_location: drop || "Coimbatore",
       booking_date: date || new Date().toISOString().split('T')[0],
       booking_time: time || "10:00 AM",
-      distance_km: distance_km || 100,
-      
-      // Alias fields for backwards compatibility
-      from_city: pickup || "Chennai",
-      to_city: drop || "Coimbatore",
-      travel_date: date || new Date().toISOString().split('T')[0],
-      
-      // Patient details
+      total_price: amount || 2300,
+      distance_charge: (distance_km || 100) * (ambulance?.price_per_km || 15),
       patient_name: patientDetails?.patient_name || "Guest",
       patient_age: patientDetails?.patient_age || 30,
       patient_condition: patientDetails?.patient_condition || "",
       need_oxygen: patientDetails?.need_oxygen || false,
       wheelchair: patientDetails?.wheelchair || false,
-      special_notes: patientDetails?.special_instructions || "",
-
-      // Fare Breakdown
-      base_charge: ambulance?.base_charge || 800,
-      distance_charge: (distance_km || 100) * (ambulance?.price_per_km || 15),
-      total_price: amount || 2300
+      special_notes: patientDetails?.special_instructions || ""
     };
 
     console.log('Payment API call starting...');
-    console.log('Booking data being sent:', bookingData);
+    console.log('Sending booking data:', bookingData);
 
     try {
       const response = await axios.post(
