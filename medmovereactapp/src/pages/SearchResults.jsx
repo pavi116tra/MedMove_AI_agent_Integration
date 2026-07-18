@@ -17,6 +17,7 @@ const SearchResults = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [distance, setDistance] = useState(0);
+  const [duration, setDuration] = useState(0);
   const [filterType, setFilterType] = useState(type?.toLowerCase() || 'all');
   
   // State for filtering cheaper options when Watch Price is clicked
@@ -28,6 +29,16 @@ const SearchResults = () => {
   // Modal State
   const [showModal, setShowModal] = useState(false);
   const [selectedAmbulance, setSelectedAmbulance] = useState(null);
+
+  const formatDuration = (mins) => {
+    if (!mins) return "N/A";
+    const hours = Math.floor(mins / 60);
+    const remainingMins = mins % 60;
+    if (hours > 0) {
+      return `${hours}h ${remainingMins}m`;
+    }
+    return `${remainingMins}m`;
+  };
 
   useEffect(() => {
     if (!pickup || !drop) {
@@ -53,6 +64,7 @@ const SearchResults = () => {
       if (response.data.success) {
         setAmbulances(response.data.ambulances);
         setDistance(response.data.distance_km);
+        setDuration(response.data.duration_minutes || 0);
       }
     } catch (err) {
       console.error('Search Error:', err);
@@ -194,7 +206,7 @@ const SearchResults = () => {
             <span className="arrow"> ──→ </span>
             <span className="location">🏥 {drop}</span>
             <span className="meta">
-              📅 {date} &nbsp; 🕐 {time} &nbsp; 📏 ~{distance} km
+              📅 {date} &nbsp; 🕐 {time} &nbsp; 📍 {distance} km · ⏱ ETA {formatDuration(duration)}
             </span>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>

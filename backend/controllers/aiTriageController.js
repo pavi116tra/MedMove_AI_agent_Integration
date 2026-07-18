@@ -20,8 +20,14 @@ const getChatbotFallbackReply = (message) => {
       return 'MedMove UPI QR code மூலம் பணம் பெறும். புக்கிங் உறுதிப்படுத்தும்போது QR code காட்டப்படும். PhonePe, GPay அல்லது Paytm மூலம் scan செய்யவும். (இது demo project — உண்மையான பணம் வசூலிக்கப்படாது)';
     } else if (/டயாலிசிஸ்|dialysis/.test(message)) {
       return 'டயாலிசிஸ் நோயாளர்களுக்கு Basic (BLS) ஆம்புலன்ஸ் பொருத்தமானது. நிலையான நோயாளர்கள் சுதந்திரமாக சுவாசிக்கக்கூடியவர்களுக்கு இது சிறந்தது. மிகவும் குறைந்த விலையிலும் கிடைக்கும். தேட "Search Ambulance" பயன்படுத்தவும்.';
+    } else if (/தொடர் பயணம்|மீண்டும் புக்|வாரம்|recurring|dialysis 3x/.test(message)) {
+      return 'தொடர் பயணங்கள் (Recurring Trips):\n\nநோயாளிகள் புக்கிங் உறுதிப்படுத்தும்போது "Is this a recurring trip?" என்பதை ஆன் செய்து, வார நாட்கள் மற்றும் இறுதி தேதியை தேர்ந்தெடுக்கலாம். பயணம் செய்ய வேண்டிய நாளில் டாஷ்போர்டில் நீல நிற பேனர் தோன்றும், அதன் மூலம் ஒரே கிளிக்கில் மீண்டும் புக் செய்யலாம்.';
+    } else if (/eta|வருகை நேரம்|நேரம்|தூரம்|km|distance|duration|how long/.test(message)) {
+      return 'வருகை நேரம் & தூரம் (ETA & Distance):\n\nஒவ்வொரு ஆம்புலன்ஸ் தேடல் முடிவிலும் உண்மையான சாலை வழி தூரம் மற்றும் வருகை நேரம் (ETA) காட்டப்படும். இது தோராயமான கணக்கீடு அல்லாமல் உண்மையான வழித்தடத்தின் அடிப்படையில் கணக்கிடப்படுகிறது.';
+    } else if (/நினைவூட்டல்|வாட்ஸ்அப்|whatsapp|driver|reminder|2 மணி/.test(message)) {
+      return 'வாட்ஸ்அப் நினைவூட்டல் (WhatsApp Reminders):\n\nஉங்கள் ஆம்புலன்ஸ் வருவதற்கு 2 மணி நேரத்திற்கு முன்பு உங்கள் டாஷ்போர்டில் ஆரஞ்சு நிற நினைவூட்டல் பேனர் தோன்றும். அதன் மூலம் வாட்ஸ்அப் வழியாக டிரைவரை நேரடியாக தொடர்பு கொள்ளலாம்.';
     } else {
-      return 'நான் உங்களுக்கு MedMove-ல் திட்டமிட்ட மருத்துவமனை பயணம் புக்கிங் செய்ய உதவுகிறேன். நீங்கள் என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?\n\n• ஆம்புலன்ஸ் வகைகள் பற்றி\n• விலை கணக்கீடு\n• புக்கிங் செய்வது எப்படி\n• நிறுவனமாக பதிவு செய்வது';
+      return 'நான் உங்களுக்கு MedMove-ல் திட்டமிட்ட மருத்துவமனை பயணம் புக்கிங் செய்ய உதவுகிறேன். நீங்கள் என்ன தெரிந்துகொள்ள விரும்புகிறீர்கள்?\n\n• ஆம்புலன்ஸ் வகைகள் பற்றி\n• விலை கணக்கீடு\n• புக்கிங் செய்வது எப்படி\n• தொடர் பயணங்கள், ETA மற்றும் நினைவூட்டல்கள்';
     }
   } else {
     if (msg.includes('type') || msg.includes('basic') ||
@@ -46,11 +52,14 @@ const getChatbotFallbackReply = (message) => {
       return 'MedMove uses UPI QR code payment. When you confirm booking, a QR code appears with the exact amount. Scan with PhonePe, GPay, or Paytm. (This is a college demo — no real money is charged.)';
     } else if (msg.includes('dialysis')) {
       return 'For dialysis patients, Basic (BLS) ambulance is the right choice. Stable patients who breathe independently do not need oxygen equipment. It is also the most affordable option. Use Search Ambulance to find available vehicles.';
-    } else if (msg.includes('whatsapp') || msg.includes('receipt') ||
-               msg.includes('confirm')) {
-      return 'After booking, your confirmation page shows all driver details. Click the Share on WhatsApp button to send booking details to yourself or family members instantly.';
+    } else if (msg.includes('recurring') || msg.includes('repeat') || msg.includes('rebook')) {
+      return 'Recurring Trips:\n\nToggle "Make this a recurring trip?" during checkout, picking day-of-week checkboxes and active until date. You will get a blue re-book banner on your dashboard when it\'s time to re-book, allowing you to re-book with a single click.';
+    } else if (msg.includes('eta') || msg.includes('time') || msg.includes('how long') || msg.includes('duration') || msg.includes('distance')) {
+      return 'ETA & Distance:\n\nEvery ambulance search result displays real driving distance and estimated arrival time (ETA) using live road-routing data for transparency.';
+    } else if (msg.includes('reminder') || msg.includes('whatsapp') || msg.includes('driver')) {
+      return 'WhatsApp Reminders:\n\nPatients automatically receive a dashboard notification ~2 hours before booked arrival with a link to message the driver directly on WhatsApp.';
     } else {
-      return 'I can help you with booking planned medical transport on MedMove. What would you like to know?\n\n• Ambulance types explained\n• How pricing works\n• How to complete a booking\n• Register as a provider';
+      return 'I can help you with booking planned medical transport on MedMove. What would you like to know?\n\n• Ambulance types explained\n• How pricing works\n• How to complete a booking\n• Recurring trips, ETA, and reminders';
     }
   }
 };
@@ -238,6 +247,40 @@ exports.chatWithGuide = async (req, res) => {
 
     const systemPrompt = `You are MedMove's booking assistant.
 MedMove is a planned non-emergency medical transport platform in India.
+
+Here is some info about MedMove's features that you can use to answer questions:
+
+[ENGLISH KNOWLEDGE BASE]
+- Ambulance Types:
+  * Basic (BLS) - For stable patients. Dialysis, routine visits. Most affordable.
+  * Oxygen (ALS) - For patients needing oxygen support.
+  * ICU (Mobile ICU) - For critical patient transfers needing monitoring/ventilator.
+- Pricing Formula: Total = Base Charge + (Distance KM x Rate per KM). Exact price is shown before booking confirmation.
+- Booking Steps:
+  1. Enter pickup and destination.
+  2. Select date and time.
+  3. Search and choose an ambulance, click Book Now.
+  4. Fill patient details and pay via UPI QR code.
+  5. Driver details are shown on confirmation.
+- Recurring Trips: Patients can toggle "Make this a recurring trip?" during checkout, picking day-of-week checkboxes and active until date. They get a blue re-book banner on their dashboard to book again in one click without manual search.
+- ETA & Distance: Every ambulance search result displays real driving distance and estimated arrival time (ETA) using live road-routing data, not flat estimates. If a patient asks "how long will it take," explain that the ETA on the card is the real-time estimate for that specific vehicle's route.
+- WhatsApp Reminders: Patients automatically receive a dashboard notification ~2 hours before booked arrival with a link to message the driver on WhatsApp. No signup needed, it is automatic for all confirmed bookings.
+
+[TAMIL KNOWLEDGE BASE / தமிழ் அறிவுத் தளம்]
+- ஆம்புலன்ஸ் வகைகள்:
+  * Basic (BLS) — நிலையான நோயாளர்களுக்கு. டயாலிசிஸ், வழக்கமான மருத்துவமனை பயணம். மிக குறைந்த கட்டணம்.
+  * Oxygen (ALS) — ஆக்ஸிஜன் தேவைப்படும் நோயாளர்களுக்கு.
+  * ICU — தீவிர கண்காணிப்பு / வென்டிலேட்டர் தேவைப்படும் நோயாளிகளுக்கு.
+- விலை கணக்கீடு: மொத்த விலை = அடிப்படை கட்டணம் + (தூரம் KM × KM கட்டணம்). புக்கிங் செய்வதற்கு முன் சரியான விலை காட்டப்படும்.
+- புக்கிங் செய்யும் படிகள்:
+  1. புறப்படும் இடம் மற்றும் சேருமிடம் உள்ளிடவும்.
+  2. தேதி, நேரம் தேர்வு செய்யவும்.
+  3. "Search Ambulance" கிளிக் செய்து, ஆம்புலன்ஸை தேர்வு செய்யவும்.
+  4. "Book Now" கிளிக் செய்து, விவரங்களை பூர்த்தி செய்து UPI QR மூலம் பணம் செலுத்தவும்.
+  5. புக்கிங் உறுதிப்படுத்தியவுடன் டிரைவர் எண் உடனே காட்டப்படும்.
+- தொடர் பயணங்கள் (Recurring Trips): நோயாளிகள் புக்கிங் உறுதிப்படுத்தும்போது "Is this a recurring trip?" என்பதை ஆன் செய்து, வார நாட்களை (Mon-Sun) மற்றும் இறுதி தேதியை தேர்வு செய்யலாம். பிறகு, அவர்கள் தேட வேண்டிய அவசியமின்றி டாஷ்போர்டில் உள்ள நீல நிற பேனர் வழியாக ஒரே கிளிக்கில் மீண்டும் புக் செய்யலாம்.
+- வருகை நேரம் & தூரம் (ETA & Distance): ஒவ்வொரு ஆம்புலன்ஸ் தேடல் முடிவும் உண்மையான சாலை வழி தூரம் மற்றும் வருகை நேரத்தை (ETA) காட்டும். நோயாளி "பயணம் எவ்வளவு நேரம் ஆகும்" என்று கேட்டால், கார்டில் காட்டப்படும் வருகை நேரம் (ETA) என்பது அந்த குறிப்பிட்ட வாகனத்தின் வழித்தடத்திற்கான நிகழ்நேர மதிப்பீடாகும் என்று விளக்கவும்.
+- வாட்ஸ்அப் நினைவூட்டல் (WhatsApp Reminders): ஆம்புலன்ஸ் வருவதற்கு 2 மணி நேரத்திற்கு முன்பு நோயாளியின் டாஷ்போர்டில் தானியங்கி நினைவூட்டல் பேனர் தோன்றும். அதன் மூலம் வாட்ஸ்அப்பில் டிரைவரை நேரடியாக தொடர்பு கொள்ளலாம். இதற்கு தனியாக பதிவு செய்ய தேவையில்லை, அனைத்து உறுதிப்படுத்தப்பட்ட புக்கிங்களுக்கும் இது தானாகவே நடக்கும்.
 
 ${contextStr}
 

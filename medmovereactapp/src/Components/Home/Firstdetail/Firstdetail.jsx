@@ -52,6 +52,26 @@ const Firstdetail = () => {
   const [time, setTime] = useState(new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }));
   const [ambulanceType, setAmbulanceType] = useState("Basic");
 
+  React.useEffect(() => {
+    const prefill = localStorage.getItem('medmove_prefill_search');
+    if (prefill) {
+      try {
+        const data = JSON.parse(prefill);
+        if (data.pickup) setSource(data.pickup);
+        if (data.drop) setDestination(data.drop);
+        if (data.type) {
+          const typeLower = data.type.toLowerCase();
+          if (typeLower === 'basic') setAmbulanceType('Basic');
+          else if (typeLower === 'oxygen') setAmbulanceType('Oxygen');
+          else if (typeLower === 'icu') setAmbulanceType('ICU');
+        }
+        localStorage.removeItem('medmove_prefill_search');
+      } catch (err) {
+        console.error('Prefill error:', err);
+      }
+    }
+  }, []);
+
   const [aiInput, setAiInput] = useState("");
   const [isAnalysing, setIsAnalysing] = useState(false);
   const [aiResult, setAiResult] = useState(null);

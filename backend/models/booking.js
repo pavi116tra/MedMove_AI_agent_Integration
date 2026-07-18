@@ -50,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
     status: { 
       type: DataTypes.STRING, 
       defaultValue: 'confirmed' 
+    },
+    reminder_sent: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {
     sequelize,

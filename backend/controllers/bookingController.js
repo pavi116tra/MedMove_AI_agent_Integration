@@ -184,6 +184,26 @@ exports.createBooking = async (req, res) => {
       console.log('Ambulance status update notice:', e.message);
     }
 
+    // STEP 7: Save Recurring Booking if selected
+    try {
+      if (req.body.is_recurring) {
+        const { days_of_week, active_until, preferred_time } = req.body;
+        const { RecurringBooking } = require('../models');
+        await RecurringBooking.create({
+          patient_id: userId || 1,
+          route_from: pickup_location,
+          route_to: drop_location,
+          vehicle_type: ambulance.type || req.body.ambulance_type || 'basic',
+          days_of_week: days_of_week || [],
+          preferred_time: preferred_time || booking_time || '10:00',
+          active_until: active_until || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        }, { transaction: t });
+        console.log('✅ Recurring Booking created successfully');
+      }
+    } catch (e) {
+      console.log('Recurring Booking creation notice:', e.message);
+    }
+
     // Commit all changes
     await t.commit();
 

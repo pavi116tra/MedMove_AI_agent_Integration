@@ -4,6 +4,12 @@
 
 **Track:** Agents for Good | Kaggle AI Agents Intensive Vibe Coding Capstone 2026
 
+**🔗 Live Links:**
+- **Frontend (Vercel):** [https://med-move-ai-agent-integration-8liisifjv.vercel.app](https://med-move-ai-agent-integration-8liisifjv.vercel.app)
+- **Backend API (Render):** [https://medmove-ai-agent-integration.onrender.com](https://medmove-ai-agent-integration.onrender.com)
+- **Backend Health Check:** [https://medmove-ai-agent-integration.onrender.com/health](https://medmove-ai-agent-integration.onrender.com/health)
+- **GitHub Repository:** [https://github.com/pavi116tra/MedMove_AI_agent_Integration.git](https://github.com/pavi116tra/MedMove_AI_agent_Integration.git)
+
 ---
 
 ## 🔴 The Problem
@@ -30,7 +36,7 @@ A Tamil-speaking grandmother can open MedMove, speak her needs in Tamil using vo
 
 ---
 
-## 🤖 AI Agents Architecture — 3 Agents Working Together
+## 🤖 AI Agents Architecture — 6 Agents Working Together
 
 ```
 Patient (Browser)
@@ -45,17 +51,35 @@ Patient (Browser)
       │         ├── Patient clicks "Watch Price 🔔" on any result
       │         ├── setInterval runs every 60 minutes on server
       │         ├── Compares watched routes vs live provider prices
-      │         └── Triggers PriceDropAlert banner on cheaper find
+      │         └── Triggers NotificationBanner on cheaper find
       │
-      └──► 🛡️ Agent 3: Security Guardian Agent (Silent Background)
-                ├── Runs on EVERY API request (middleware layer)
-                ├── Brute Force Detector → blocks after 5 attempts
-                ├── OTP Abuse Detector → rate limits per phone
-                ├── SQLi/XSS Injection Detector → blocks patterns
-                ├── Scraping Detector → bot fingerprinting
-                ├── Discord Webhook → instant owner alert
-                ├── MCP Server → 5 security tools over stdio
-                └── CLI → node security-cli.js all
+      ├──► 🛡️ Agent 3: Security Guardian Agent (Silent Background)
+      │         ├── Runs on EVERY API request (middleware layer)
+      │         ├── Brute Force Detector → blocks after 5 attempts
+      │         ├── OTP Abuse Detector → rate limits per phone
+      │         ├── SQLi/XSS Injection Detector → blocks patterns
+      │         ├── Scraping Detector → bot fingerprinting
+      │         ├── Discord Webhook → instant owner alert
+      │         ├── MCP Server → 5 security tools over stdio
+      │         └── CLI → node security-cli.js all
+      │
+      ├──► 🔁 Agent 4: Recurring Trip Agent
+      │         ├── Patient opts in during booking modal confirmation
+      │         ├── Daily cron job (6 AM) checks tomorrow's scheduled trips
+      │         ├── Suggests recurring bookings in suggestion table
+      │         └── Shows blue banner alert with one-click pre-filled booking
+      │
+      ├──► 📍 Agent 5: ETA & Route Agent (No-cost OSRM/Nominatim)
+      │         ├── Geocodes city names to coordinates using Nominatim API
+      │         ├── Computes driving distances/times via OSRM routing engine
+      │         ├── Caches lookups inside local SQL table and in-memory caches
+      │         └── Replaces static distances with dynamic ETA estimates on cards
+      │
+      └──► 🔔 Agent 6: WhatsApp Deep-Link Reminder Agent
+                ├── Runs every 15 minutes checking bookings 2 hours away
+                ├── Builds pre-filled wa.me text link for driver messaging
+                ├── Saves reminder notification to general alerts
+                └── Shows orange banner prompting WhatsApp deep-link trigger
 ```
 
 ### Agent 1 — AI Triage & Transport Advisor
@@ -126,6 +150,33 @@ Silent background agent protecting every API call:
 - **Discord Alerts:** Real-time webhook notification to owner on attack
 - **MCP Server:** `mcp-server.js` exposes 5 security tools over stdio JSON-RPC
 - **CLI:** `node security-cli.js all` for real-time security dashboard
+
+### Agent 4 — Recurring Trip Agent
+
+Explicit opt-in recurring trip assistant that provides reliable repeats for patients undergoing frequent procedures (like dialysis 3x/week):
+
+- **Opt-in Form:** During booking confirmation, patient checks "Make this a recurring trip?" and picks repeating days (Mon/Wed/Fri etc.) plus an end date.
+- **Background Cron:** `runRecurringAgent()` runs daily (at 6 AM) and checks active repeating bookings. If tomorrow is one of the scheduled days, it inserts a recommendation into the `RecurringSuggestion` table.
+- **One-Click Rebook Banner:** A prominent blue alert banner prompts the user: *"🔁 It's almost time for your Tuesday dialysis trip — Book the same ambulance again?"*. Clicking "Book Again" pre-fills the search form on the homepage and executes the query instantly.
+
+### Agent 5 — ETA & Route Agent
+
+Free routing agent that replaces static calculations with real road routes and durations using OSM APIs:
+
+- **Nominatim Geocoding:** Geocodes city inputs to coordinates. Caches results in the local `CityCoordinate` table to minimize API hits.
+- **OSRM Driving Engine:** Queries `router.project-osrm.org` to fetch actual driving distance and travel duration.
+- **In-Memory Cache:** Keyed by route to prevent repeated calculations during the same day.
+- **Robust Fallback:** If OSRM limits traffic, catches exceptions and falls back to straight-line distance mapping and 40km/h traffic duration estimators.
+- **Search Card Updates:** Displays dynamic distance and ETA (e.g. `📍 505 km · ⏱ ETA 7h 40m`) on the frontend search result cards.
+
+### Agent 6 — Reminder Agent
+
+Zero-cost, SMS-free notification agent that alerts patients of upcoming travels:
+
+- **Background Daemon:** `runReminderAgent()` runs on a 15-minute interval checking confirmed bookings.
+- **Window Filter:** Targets bookings scheduled between 1h 45m and 2h 15m from the current server time.
+- **WhatsApp Link Generation:** Builds a pre-filled WhatsApp link (`wa.me/<driver_phone>`) targeting the driver's phone with trip details.
+- **Orange Alert Banner:** Prompts an urgent alert banner on the dashboard: *"🔔 Your ambulance to Coimbatore arrives in 2 hours — Message driver on WhatsApp →"*. Clicking it opens the pre-filled WhatsApp link in a new browser tab and dismisses the alert.
 
 ---
 

@@ -1,4 +1,5 @@
 const { Ambulance, Provider, AmbulanceSlot } = require('../models');
+const routeService = require('../services/routeService');
 
 // Mock Distance Calculator
 const calculateDistance = (pickup, drop) => {
@@ -44,7 +45,7 @@ const executeAmbulanceSearch = async ({ pickup, drop, from_city, to_city, type, 
   const vType = type || vehicle_type;
   const tDate = date || travel_date;
 
-  if (!pLocation || !dLocation) return { distance_km: 0, results: [] };
+  if (!pLocation || !dLocation) return { distance_km: 0, duration_minutes: 0, results: [] };
 
   const whereConditions = { status: 'available' };
   if (vType && vType.toLowerCase() !== 'all') {
@@ -86,7 +87,10 @@ const executeAmbulanceSearch = async ({ pickup, drop, from_city, to_city, type, 
     }
   }
 
-  const distance_km = calculateDistance(pickup, drop);
+  // Get real distance and duration from routeService
+  const routeDetails = await routeService.getRouteDetails(pLocation, dLocation);
+  const distance_km = routeDetails.distance_km;
+  const duration_minutes = routeDetails.duration_minutes;
 
   const results = availableAmbulances.map(amb => {
     const distance_charge = distance_km * amb.price_per_km;
@@ -102,6 +106,7 @@ const executeAmbulanceSearch = async ({ pickup, drop, from_city, to_city, type, 
       base_charge: amb.base_charge,
       price_per_km: amb.price_per_km,
       distance_km,
+      duration_minutes,
       distance_charge,
       estimated_total,
       status: amb.status,
@@ -114,10 +119,11 @@ const executeAmbulanceSearch = async ({ pickup, drop, from_city, to_city, type, 
 
   results.sort((a, b) => a.estimated_total - b.estimated_total);
 
-  return { distance_km, results };
+  return { distance_km, duration_minutes, results };
 };
 
 // @desc    Search available ambulances
+// @route   GET /api/ambulances/search
 exports.searchAmbulances = async (req, res) => {
   try {
     const { pickup, drop, type, date, time } = req.query;
@@ -126,13 +132,14 @@ exports.searchAmbulances = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Pickup and drop locations are required' });
     }
 
-    const { distance_km, results } = await executeAmbulanceSearch({ pickup, drop, type, date, time });
+    const { distance_km, duration_minutes, results } = await executeAmbulanceSearch({ pickup, drop, type, date, time });
 
     res.json({
       success: true,
       pickup,
       drop,
       distance_km,
+      duration_minutes,
       total_results: results.length,
       ambulances: results
     });

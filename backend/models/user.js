@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.hasMany(models.Booking, { foreignKey: 'user_id' });
+      User.hasMany(models.RecurringBooking, { foreignKey: 'patient_id' });
+      User.hasMany(models.RecurringSuggestion, { foreignKey: 'patient_id' });
+      User.hasMany(models.Notification, { foreignKey: 'patient_id' });
     }
   }
   User.init({

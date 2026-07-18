@@ -45,7 +45,12 @@ const ambulanceRoutes = require('./routes/ambulanceRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const pricingWatchRoutes = require('./routes/pricingWatchRoutes');
+const recurringTripRoutes = require('./routes/recurringTripRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+
 const { runPricingAgent } = require('./controllers/pricingWatchController');
+const { runRecurringAgent } = require('./controllers/recurringTripController');
+const { runReminderAgent } = require('./controllers/reminderController');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/provider', providerRoutes);
@@ -54,6 +59,8 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/security', securityRoutes);
 app.use('/api/price-watch', pricingWatchRoutes);
+app.use('/api/recurring-suggestions', recurringTripRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
@@ -73,6 +80,32 @@ sequelize.sync({ alter: true })
             // Start Dynamic Pricing Watch Agent (Runs on startup after 5s and every 60 minutes)
             setTimeout(runPricingAgent, 5000);
             setInterval(runPricingAgent, 60 * 60 * 1000);
+
+            // Import cron for daily scheduling of Recurring Agent
+            const cron = require('node-cron');
+
+            // Start Recurring Trip Agent (runs daily at 6 AM)
+            cron.schedule('0 6 * * *', () => {
+                console.log('⏰ [Cron] Running Recurring Trip Agent daily at 6 AM...');
+                runRecurringAgent().catch(err => console.error('Recurring trip agent error:', err));
+            });
+
+            // Start Reminder Agent (runs every 15 minutes)
+            setInterval(() => {
+                console.log('⏰ [Interval] Running Reminder Agent...');
+                runReminderAgent().catch(err => console.error('Reminder agent error:', err));
+            }, 15 * 60 * 1000);
+
+            // Fast startup runs for verification/demo purposes
+            setTimeout(() => {
+                console.log('🤖 [Startup] Triggering Reminder Agent check...');
+                runReminderAgent().catch(err => console.error('Startup reminder agent error:', err));
+            }, 8000);
+
+            setTimeout(() => {
+                console.log('🤖 [Startup] Triggering Recurring Trip Agent check...');
+                runRecurringAgent().catch(err => console.error('Startup recurring agent error:', err));
+            }, 12000);
         });
     })
     .catch(err => {

@@ -57,7 +57,13 @@ const Payment = () => {
       patient_condition: patientDetails?.patient_condition || "",
       need_oxygen: patientDetails?.need_oxygen || false,
       wheelchair: patientDetails?.wheelchair || false,
-      special_notes: patientDetails?.special_instructions || ""
+      special_notes: patientDetails?.special_instructions || "",
+
+      // Recurring trip details
+      is_recurring: patientDetails?.is_recurring || false,
+      days_of_week: patientDetails?.days_of_week || [],
+      active_until: patientDetails?.active_until || null,
+      preferred_time: time || "10:00 AM"
     };
 
     console.log('Payment API call starting...');

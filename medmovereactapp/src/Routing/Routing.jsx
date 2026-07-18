@@ -16,12 +16,12 @@ import BookingSuccess from '../pages/BookingSuccess';
 import AboutUs from '../pages/AboutUs';
 import ChatBot from '../Components/ChatBot/ChatBot';
 import PriceWatchDashboard from '../pages/PriceWatchDashboard';
-import PriceDropAlert from '../Components/PriceDropAlert/PriceDropAlert';
+import NotificationBanner from '../Components/NotificationBanner/NotificationBanner';
 
 const Routing = () => {
   return (
     <BrowserRouter>
-      <PriceDropAlert />
+      <NotificationBanner />
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/register" element={<RoleSelectRegister />} />
